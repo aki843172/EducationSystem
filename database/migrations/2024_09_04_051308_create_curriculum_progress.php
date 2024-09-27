@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('curriculum_progress', function (Blueprint $table) {
             $table->id();
-            $table->unsigneBigInteger('curriculumus_id');
-            $table->unsigneBigInteger('user_id');
+            $table->unsignedBigInteger('curriculumus_id');
+            $table->unsignedBigInteger('user_id');
             $table->tinyInteger('clear_flg')->default(0);
             $table->timestamps();
 
