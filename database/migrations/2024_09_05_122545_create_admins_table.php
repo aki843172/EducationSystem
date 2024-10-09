@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('admins', function (Blueprint $table) {
             $table->id()->nullable();
+            $table->string('kana')->nullable();
             $table->string('name')->nullable();
             $table->string('email')->nullable();
             $table->string('password')->nullable();

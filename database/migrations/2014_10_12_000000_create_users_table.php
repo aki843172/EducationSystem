@@ -20,10 +20,8 @@ return new class extends Migration
             $table->string('email');
             $table->string('password');
             $table->string('profile_image')->nullable();
-            $table->unsignedBigInteger('grade_id');
+            $table->unsignedBigInteger('grade_id')->default(1);
             $table->timestamps();
-
-            
         });
     }
 
