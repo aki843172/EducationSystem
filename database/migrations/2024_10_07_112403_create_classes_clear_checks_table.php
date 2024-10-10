@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('classes_clear_checks', function (Blueprint $table) {
-            $table->id()->nullable();
-            $table->unsignedBigInteger('users_id')->nullable();
-            $table->unsignedBigInteger('grade_id')->nullable();
-            $table->tinyInteger('clear_flg')->default(0)->nullable();
+            $table->id();
+            $table->unsignedBigInteger('users_id');
+            $table->unsignedBigInteger('grade_id');
+            $table->tinyInteger('clear_flg')->default(0);
             $table->timestamps();
         });
     }

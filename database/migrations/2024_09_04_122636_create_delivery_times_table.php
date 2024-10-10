@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('delivery_times', function (Blueprint $table) {
             $table->id();
             // 外部キー制約
-            $table->integer('curriculums_id')->unsigned();
+            $table->unsignedBigInteger('curriculums_id');
             $table->foreign('curriculums_id')->references('id')->on('curriculums');
             $table->dateTime('delivery_from');
             $table->dateTime('delivery_to');
