@@ -21,7 +21,7 @@ return new class extends Migration
             $table->mediumText('video_url')->nullable();
             $table->tinyInteger('always_delivery_flg');
             // 外部キー制約
-            $table->integer('grade_id')->unsigned();
+            $table->unsignedBigInteger('grade_id');
             $table->foreign('grade_id')->references('id')->on('grades');
             $table->timestamps();
         });
