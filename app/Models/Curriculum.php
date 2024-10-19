@@ -8,7 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Curriculum extends Model
 {
     use HasFactory;
-    protected $fillable = ['title', 'description', 'video_url', 'available_from', 'available_to'];
+    protected $fillable = [
+        'title',
+        'description', 
+        'video_url', 
+        'available_from', 
+        'available_to'
+        ];
 
     public function isAvailable()
     {

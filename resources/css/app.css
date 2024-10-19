@@ -1,0 +1,57 @@
+.header {
+    background-color: #FFA07A; /* オレンジ色 */
+    padding: 10px;
+    text-align: center;
+}
+
+.nav-buttons .btn {
+    background-color: #008CBA; /* ボタンの色 */
+    color: white;
+    padding: 10px 15px;
+    margin: 5px;
+    text-decoration: none;
+}
+
+.banner-container {
+    position: relative;
+    width: 100%;
+}
+
+.banner {
+    width: 100%;
+    overflow: hidden; /* 画像がはみ出ないように */
+}
+
+.banner img {
+    width: 100%; /* バナー画像を全幅に */
+    height: auto;
+}
+
+.banner-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+
+.banner-controls button {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.news {
+    margin-top: 20px;
+}
+
+.news h2 {
+    font-size: 24px;
+}
+
+.news ul {
+    list-style-type: none;
+    padding: 0;
+}

@@ -1,23 +1,38 @@
 @extends('user.layouts.app')
 
-@section('content')
+@section('title', 'トップページ')
 
-    
-    <section id="banners">
-    <h2>バナー画像</h2>
-        @foreach ($banners as $banner)
-            <img src="{{ asset('storage/images/banner/' . $banner->image) }}" alt="バナー画像">
-        @endforeach
-    </section>
-    
-    <section id="articles">
+@section('content')
+    <div class="banner">
+        <img src="{{ asset('storage/images/banner/banner1.jpg') }}" alt="バナー画像">
+        <!-- バナー切り替えボタン -->
+        <button id="change-banner">...</button>
+    </div>
+
+    <div class="notifications">
         <h2>お知らせ</h2>
         <ul>
-            @foreach ($articles as $article)
+            @foreach($articles as $article)
                 <li>
-                    <a href="{{ route('user.article', $article->id) }}">{{ $article->title }}</a>
+                <a href="{{ route('user.article', ['id' => $article->id]) }}">
+                        {{ $article->title }} ({{ $article->posted_date->format('Y/m/d') }})
+                    </a>
                 </li>
             @endforeach
         </ul>
-    </section>
+    </div>
+    
+ 
+    <script>
+        let currentIndex = 0;
+        const banners = document.querySelectorAll('.banner-image');
+
+        function changeBanner(direction) {
+            banners[currentIndex].style.display = 'none'; // 現在のバナーを非表示に
+            currentIndex = (currentIndex + direction + banners.length) % banners.length; // 新しいインデックスを計算
+            banners[currentIndex].style.display = 'block'; // 新しいバナーを表示
+        }
+    </script>
+
+
 @endsection

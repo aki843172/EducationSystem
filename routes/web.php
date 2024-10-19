@@ -46,10 +46,13 @@ Route::prefix('user')->namespace('User')->name('user.')->group(function () {
     Route::post('/curriculum_list', [App\Http\Controllers\User\CurriculumController::class, 'curriculum']);
     
     Route::get('/progress', [App\Http\Controllers\User\ProgressController::class, 'showProgress'])->name('show.progress');
-    Route::post('/progress', [App\Http\Controllers\User\ProgressController::class, 'progress']);
+   //受講しましたボタンの処理のための進捗を登録するルート
+    Route::post('/progress', [App\Http\Controllers\User\ProgressController::class, 'markAsCleared'])->name('progress');
 
     Route::get('/profile', [App\Http\Controllers\User\ProfileController::class, 'showProfileForm'])->name('show.profile');
     Route::post('/profile', [App\Http\Controllers\User\ProfileController::class, 'profile']);
+
+    
 
 });
 
