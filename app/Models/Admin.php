@@ -9,11 +9,9 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 
-
-class User extends Authenticatable
+class Admin extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
-    
 
     /**
      * The attributes that are mass assignable.
@@ -45,8 +43,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function getUsers(){
-        $users = DB::table('users')->get();
-        return $users;
+    public function getAdmins(){
+        $admins = DB::table('admins')->get();
+        return $admins;
     }
+
 }
