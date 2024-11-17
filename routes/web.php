@@ -24,28 +24,49 @@ use App\Http\Controllers\User\CurriculumController;
 Auth::routes();
 
 // 未ログイン時、ログイン画面へリダイレクト
-Route::get('/', function () {
-    return redirect()->route('login')->middleware('auth');
-});
+// Route::get('/', function () {
+//     return redirect()->route('login')->middleware('auth');
+// });
 
-Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-// 管理者トップ画面
-Route::view('/admin/top','admin.top')->name('show.top');
+// 管理者ログイン
+Route::prefix('admin')->group(function () {
+    // ログイン画面の表示
+    Route::view('auth/login', 'admin.auth.login')->name('show.admin.login');
+    // ログイン後の画面
+    Route::view('top','admin.top')->middleware('auth:admins')->name('show.top');
+    // ログイン送信
+    Route::post('auth/login', [\App\Http\Controllers\Admin\LoginController::class,'login']);
+    // ログアウト後の画面
+    Route::get('auth/logout', [\App\Http\Controllers\Admin\LoginController::class, 'logout']);
+    
+    // 管理者登録画面の表示
+    Route::view('auth/register', 'admin.auth.register');
+    // 管理者登録機能
+    Route::post('auth/register', [\App\Http\Controllers\Admin\RegisterController::class, 'register']);
+    });
+    
+// ユーザーログイン
+    Route::get('user/auth/login', [\App\Http\Controllers\Auth\LoginController::class, 'showloginForm'])->name('show.user.login');
+    Route::post('user/auth/login', [\App\Http\Controllers\Auth\LoginController::class, 'login'])->name('login.user.login');
+    Route::get('user/auth/logout', [\App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('login.user.logout');
+
 
 // ユーザーカリキュラム画面
 Route::controller(CurriculumController::class)
     ->prefix('/user/curriculum_list')
     ->group(function(){
         Route::get('/','showCurriculumLists')->name('show.curriculum');
-        Route::get('/delivery/{id}','showCurriculumDetail')->name('show.detail');
+        Route::get('delivery/{id}','showCurriculumDetail')->name('show.detail');
     });
 
 // 管理者バナー編集画面
 Route::controller(BannerController::class)
     ->prefix('/admin/banner_edit')
     ->group(function(){
-        Route::get('/','showBannerEdit');
+        Route::get('/','showBannerEdit')->name('show.banner_edit');
+        Route::post('/','saveBanners')->name('save.banners');
+        Route::delete('destroy/{id}','deleteBanner');
     });
 
 ?>

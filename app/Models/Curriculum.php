@@ -16,6 +16,9 @@ class Curriculum extends Model
     protected $fillable = [
         'title',
         'thumbnail',
+        'description', 
+        'video_url', 
+        'always_delivery_flg',
         'grade_id'
     ];
 
@@ -25,6 +28,9 @@ class Curriculum extends Model
     }
     
 
-
-
+    public function isAvailable()
+    {
+        $now = now();
+        return $this->available_from <= $now && $this->available_to >= $now;
+    }
 }

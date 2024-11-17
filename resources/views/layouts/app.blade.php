@@ -11,13 +11,12 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-
-    <title>{{ config('app.name', 'EducationSystem') }}</title>
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    
+
+    <title>{{ config('app.name', 'EducationSystem') }}</title>
+
 </head>
 <body>
     <div id="app">

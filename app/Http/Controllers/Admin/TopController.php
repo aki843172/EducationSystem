@@ -17,7 +17,7 @@ class TopController extends Controller
         }
         else
         {
-            return view('login');
+            return to_route('login');
         }
     }
 }

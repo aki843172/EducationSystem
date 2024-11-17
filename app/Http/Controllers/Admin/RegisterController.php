@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Providers\RouteServiceProvider;
+use App\Models\Admin;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 
 class RegisterController extends Controller
 {
@@ -28,7 +30,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/admin/top';
 
     /**
      * Create a new controller instance.
@@ -37,8 +39,13 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        $this->middleware('guest:admin');
     }
+
+    protected function guard()                  //追記
+    {                                           //追記
+        return Auth::guard('admins');            //追記
+    }       
 
     /**
      * Get a validator for an incoming registration request.
@@ -49,6 +56,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
+            'kana' => ['required', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
@@ -63,7 +71,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        return Admin::create([
+            'kana' => $data['kana'],
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),

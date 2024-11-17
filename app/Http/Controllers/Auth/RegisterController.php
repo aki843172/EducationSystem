@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace app\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -23,35 +24,48 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
-    /**
-     * Where to redirect users after registration.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/login';
-
+   
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function  showRegisterForm()
     {
-        $this->middleware('guest');
+        return view('user.auth.register');
     }
 
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
-     */
-    protected function validator(array $data)
+    public function register(Request $request)
     {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+          // バリデーションを実行
+        $this->validateRegistration($request);
+
+        // ユーザーを作成
+        $user = $this->create($request->all());
+
+        return redirect()->route('user.show.login');
+    }
+
+
+    protected function validateRegistration(Request $request)
+    {
+        // バリデーションルールの定義
+        $request->validate([
+            'name' => 'required|string|min:1|max:255',
+            'name_kana' => 'required|string|min:1|max:255|regex:/^[ァ-ヶー]+$/u', // カタカナのみ
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8|max:255|alpha_num', // 半角英数字
+            'password_confirmation' => 'required|string|same:password', // 確認用パスワード
+        ], [
+            'name.required' => '*ユーザーネームを入力してください。',
+            'name_kana.required' => '*カナを入力してください。',
+            'name_kana.regex' => '*カナはカタカナで入力してください。',
+            'email.required' => '*メールアドレスを入力してください。',
+            'password.required' => '*パスワードを入力してください。',
+            'password.min' => '*パスワードは8文字以上で指定してください。',
+            'password.alpha_num' => '*パスワードは半角で入力してください。',
+            'password_confirmation.required' => '*パスワード確認を入力してください。',
+            'password_confirmation.same' => '*パスワードが一致しません。',
         ]);
     }
 
@@ -65,8 +79,10 @@ class RegisterController extends Controller
     {
         return User::create([
             'name' => $data['name'],
+            'name_kana' => $data['name_kana'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'grade_id' => 1, // デフォルトの学年IDを設定
         ]);
     }
 }

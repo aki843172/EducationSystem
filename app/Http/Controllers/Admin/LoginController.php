@@ -1,9 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Ui\Presets\React;
+
+
 
 class LoginController extends Controller
 {
@@ -18,7 +24,9 @@ class LoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers;
+    use AuthenticatesUsers {                                //追記
+        logout as performLogout;                            //追記
+    }                               
 
     /**
      * Where to redirect users after login.
@@ -34,9 +42,38 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
-        $this->middleware('auth')->only('logout');
+        $this->middleware('guest:admins')->except('logout');
     }
 
+    
+    protected function guard()                              // guardは「ログイン機構の種類」ログイン画面の数だけguardがある。
+    {                                                       //追記
+        return Auth::guard('admins');                        //追記
+    }
+
+    public function login(Request $request){
+
+        $login_info = $request->only(['email','password']);
+        $admins = Auth::all();
+
+        // ユーザー情報が見つかったらログイン
+        if(Auth::guard('admins')->attempt($login_info)){
+            // ログイン後に表示するページにリダイレクト
+            return redirect()->to_route('show.top',compact('admins'))->with([
+                'message'=>'ログインしました',
+            ]);
+        } else {
+        // ログインできなかったら元のページに戻る
+        return back()->withErrors([
+            'message' => ['ログインに失敗しました'],
+        ]);
+    }
+    }
+
+    // ログアウト処理
+    public function logout(Request $request){
+        $this->performLogout($request);                     //追記
+        return to_route('show.admin.login');
+    }
 
 }

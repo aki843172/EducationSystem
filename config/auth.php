@@ -35,6 +35,10 @@ return [
     |
     */
 
+    // あえて平たく言うと「どうやって認証するか」が「ガード」で、「どこの情報と照らし合わせて認証するか」がプロバイダです。
+    // 通常、LaravelにおいてWebに表示した画面で認証をするときはセッションを使うので、今回もガードでセッションを利用することを宣言しています。
+    // 今回は管理画面系の認証はadmins、マイページ系の認証はmembersとして設定することにしました。
+
     // 認証管理の方法（セッションかトークンか）
 
     'guards' => [
@@ -46,7 +50,7 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        'admin' => [
+        'admins' => [
             'driver' => 'session',
             'provider' => 'admins',
         ]
@@ -75,16 +79,13 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
-        ],
+
         'admins' => [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
+            ],
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

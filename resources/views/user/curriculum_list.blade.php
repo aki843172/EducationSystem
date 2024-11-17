@@ -3,49 +3,51 @@
 @extends('components.user_header')
 
 @section('content')
-<div>
+<div class="text-center">
     <a href="{{ route('show.curriculum') }}">←戻る</a>
 
     <div class="content-wrap">
-        <button id="goBack" class="btn btn-secondary">◀︎</button>
-        <div class="">{{__('西暦月スケジュール')}}</div>
+        <div class="d-flex">
+            <button id="goBack" class="btn btn-secondary">◀︎</button>
+            <div class="">{{__('西暦月スケジュール')}}</div>
             <button id="goNext" class="btn btn-secondary">▶︎</button>
-
-            <!-- 【作成期日:11/17】 -->
-            <div class="gd-button">{{__('ログインユーザーの学年表示')}}</div>
-            <div class="curriculum-gradelist">
-
-                <!-- 各ボタンを押すと、指定した学年の時間割が表示される（初期表示はログインユーザーの学年のもの） -->
-                <!-- 学年・表示期間と現在の日時に当てはまるデータを取得する -->
-                <button type="button" id="1" class="btn btn-info">小学校1年生</button>
-                <button type="button" id="2" class="btn btn-info">小学校2年生</button>
-                <button type="button" id="3" class="btn btn-info">小学校3年生</button>
-                <button type="button" id="4" class="btn btn-info">小学校4年生</button>
-                <button type="button" id="5" class="btn btn-info">小学校5年生</button>
-                <button type="button" id="6" class="btn btn-info">小学校6年生</button>
-                <button type="button" id="7" class="btn btn-success">中学校1年生</button>
-                <button type="button" id="8" class="btn btn-success">中学校2年生</button>
-                <button type="button" id="9" class="btn btn-success">中学校3年生</button>
-                <button type="button" id="10" class="btn btn-primary">高校1年生</button>
-                <button type="button" id="11" class="btn btn-primary">高校2年生</button>
-                <button type="button" id="12" class="btn btn-primary">高校3年生</button>
-            </div>
-
-            <div class="curriculum-list">
-            @foreach($curriculums as $curriculum)
-                <div class="curriculum-item border border-secondary border-2 d-inline-flex">
-                    <a href="">
-                        {{ $curriculum->thumbnail }}
-                    </a>
-                    <a href="" class="curriculum-item-title">
-                        {{ $curriculum->title }}
-                    </a>
-                    <a href="" class="curriculum-item-schedule">
-                        {{ $curriculum->description }}
-                    </a>
-                </div>
-            @endforeach
         </div>
+
+            <div class="d-flex">
+                <div class="gd-button">{{__('ログインユーザーの学年表示')}}</div>
+                <div class="col-sm-4">
+
+                    <!-- 各ボタンを押すと、指定した学年の時間割が表示される（初期表示はログインユーザーの学年のもの） -->
+                    <!-- 学年・表示期間と現在の日時に当てはまるデータを取得する -->
+                    <button type="button" id="1" class="btn btn-info">小学校1年生</button>
+                    <button type="button" id="2" class="btn btn-info">小学校2年生</button>
+                    <button type="button" id="3" class="btn btn-info">小学校3年生</button>
+                    <button type="button" id="4" class="btn btn-info">小学校4年生</button>
+                    <button type="button" id="5" class="btn btn-info">小学校5年生</button>
+                    <button type="button" id="6" class="btn btn-info">小学校6年生</button>
+                    <button type="button" id="7" class="btn btn-success">中学校1年生</button>
+                    <button type="button" id="8" class="btn btn-success">中学校2年生</button>
+                    <button type="button" id="9" class="btn btn-success">中学校3年生</button>
+                    <button type="button" id="10" class="btn btn-primary">高校1年生</button>
+                    <button type="button" id="11" class="btn btn-primary">高校2年生</button>
+                    <button type="button" id="12" class="btn btn-primary">高校3年生</button>
+                </div>
+
+                <div class="curriculum-list col-sm-8">
+                @foreach($curriculums as $curriculum)
+                    <div class="curriculum-item border border-secondary border-2 d-inline-flex">
+                        <a href="">
+                            {{ $curriculum->thumbnail }}
+                        </a>
+                        <a href="" class="curriculum-item-title">
+                            {{ $curriculum->title }}
+                        </a>
+                        <a href="" class="curriculum-item-schedule">
+                            {{ $curriculum->description }}
+                        </a>
+                    </div>
+                @endforeach
+            </div>
     </div>
 </div>
 

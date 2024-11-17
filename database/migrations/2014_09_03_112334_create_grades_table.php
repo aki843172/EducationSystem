@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -13,15 +14,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('delivery_times', function (Blueprint $table) {
+        Schema::create('grades', function (Blueprint $table) {
             $table->id();
-            // 外部キー制約
-            $table->unsignedBigInteger('curriculums_id');
-            $table->foreign('curriculums_id')->references('id')->on('curriculums');
-            $table->dateTime('delivery_from');
-            $table->dateTime('delivery_to');
+            $table->string('name');
             $table->timestamps();
         });
+
+        // 学年の名前を登録
+        DB::table('grades')->insert([
+            ['id' => 1, 'name' => '小学１年生']
+        ]);
     }
 
     /**
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('delivery_times');
+        Schema::dropIfExists('grades');
     }
 };
