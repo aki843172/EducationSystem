@@ -22,12 +22,11 @@
                 @foreach($banners as $banner)
                 <li class="bannerslist-row list-unstyled bg-light">
 
-                    <!-- 【作成期日:11/17】table:bannersに登録済のimageがあれば、上記の上に表示する -->
                     <td><img src="{{ asset($banner->image) }}" alt="商品画像" width="100"></td>
 
                     
                     <!-- 指定行削除ボタン -->
-                    <button data-user_id="{{ $banner->id }}" class="bannerslist-delete">削除</button>
+                    <button data-id="{{ $banner->id }}" class="bannerslist-delete">削除</button>
                 </li>
                 @endforeach
                 <!-- 行追加ボタン -->
@@ -62,7 +61,8 @@
 
     // 行削除機能
     $(function(){
-        $(document).on('click','.bannerslist-delete', function(){
+        $(document).on('click','.bannerslist-delete', function(e){ //なぜここでeを持たせるのか、なぜe.preventDefault()が必要なのか
+            e.preventDefault();
             var deleteConfirm = confirm('選択した行を削除しますか？');
 
             if(deleteConfirm == true){
@@ -74,21 +74,17 @@
                 // Ajaxリクエストが行われるたびに、URLと他が自動的に使用される
                 $.ajax({
                         type: 'POST',
-                        url: 'destroy/'+ID,
+                        url: 'banner_edit/destroy/'+ID,
                         data: {'id': ID,
                                 '_method': 'DELETE'}
-                        })
-                        .done(function() {
-                            // 通信が成功したら、クリックした要素の親要素の <tr> を削除
-                            clickEle.parents('li').remove();
-                        })
-
-                        } else {
-                            
-                        (function(e) {
-                        e.preventDefault() // 元々の処理を無効化
-                });
-            };
+                }).done(function() {
+                        console.log('成功');
+                        // 通信が成功したら、クリックした要素の親要素の <tr> を削除
+                        clickEle.parents('li').remove();
+                    }).fail(function(error){ //なぜここにerrorを入れるのか
+                        console.log(error);
+                    })
+                };
         });
     });
 </script>

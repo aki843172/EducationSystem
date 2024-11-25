@@ -16,7 +16,6 @@ class BannerController extends Controller
         return view('admin.banner_edit', compact('banners'));
     }
 
-    // 【作成期日:11/17】
     function saveBanners(BannerRequest $request){
 
         $image = $request->file('image');
@@ -29,7 +28,7 @@ class BannerController extends Controller
             // storage/app/public/images/bannerフォルダ内に、取得したファイル名で保存
             $image->storeAs('public/images/banner', $file_name);
             // データベース登録用に、ファイルパスを作成
-            $img_path = 'storage/public/images/banner/'.$file_name;
+            $img_path = 'storage/images/banner/'.$file_name;
         } else {
             $img_path = null;
         }
@@ -47,6 +46,9 @@ class BannerController extends Controller
             return back()->with('message', '正しく登録されませんでした');
             }
             return to_route('save.banners', compact('image'))->with('message', 'バナー画像を登録しました');
+        }
+
+    
 
         
         function deleteBanner ($id) {
@@ -57,10 +59,10 @@ class BannerController extends Controller
                 $banner->delete();
                 DB::commit();
             } catch (\Exception $e) {
+                
                 DB::rollback();
-                return back()->with('error', $e->getMessage());
+                return back()->with('error', $e->getMessage('削除失敗！'));
             }
-        }
 
     }
 

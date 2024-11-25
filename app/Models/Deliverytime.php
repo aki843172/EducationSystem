@@ -9,5 +9,19 @@ class DeliveryTime extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['curriculums_id', 'delivery_from', 'delivery_to'];
+    protected $table ='delivery_times';
+
+
+    protected $fillable = [
+        'curriculums_id',
+        'delivery_from',
+        'delivery_to'
+    ];
+
+
+    public function curriculums()
+    {
+        return $this->hasMany(Curriculum::class,'id','curriculums_id');
+    }
+
 }

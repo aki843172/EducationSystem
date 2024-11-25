@@ -33,4 +33,9 @@ class Curriculum extends Model
         $now = now();
         return $this->available_from <= $now && $this->available_to >= $now;
     }
+
+    public function delivery_times()
+    {
+        return $this->belongsTo(DeriveryTime::class,'curriculums_id','id');
+    }
 }
