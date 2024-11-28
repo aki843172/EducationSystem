@@ -5,10 +5,11 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Admin\TopController;
-use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\AdminTopController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\Admin\RegisterController;
+use App\Http\Controllers\Admin\AdminRegisterController;
+use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\User\CurriculumController;
 
 /*
@@ -30,28 +31,29 @@ Auth::routes();
 //     return redirect()->route('login')->middleware('auth');
 // });
 
+// Admin用コントローラーとUser用コントローラーを書き分ける
 
-// 管理者ログイン
+
+// 管理者認証機能
 Route::prefix('admin')->group(function () {
-    // ログイン画面の表示
+    // ログイン画面
     Route::view('auth/login', 'admin.auth.login')->name('show.admin.login');
     // ログイン後の画面
-    Route::view('top','admin.top')->middleware('auth:admins')->name('show.top');
+    Route::view('top','admin.top')->middleware(['auth:admin'])->name('show.admin.top');
     // ログイン送信
-    Route::post('auth/login', [LoginController::class,'login']);
+    Route::post('auth/login', [AdminLoginController::class,'login'])->name('admin.login');
     // ログアウト後の画面
-    Route::get('auth/logout', [LoginController::class, 'logout']);
-    
-    // 管理者登録画面の表示
+    Route::get('auth/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
+    // 管理者新規登録画面
     Route::view('auth/register', 'admin.auth.register');
     // 管理者登録機能
-    Route::post('auth/register', [RegisterController::class, 'register']);
+    Route::post('auth/register', [AdminRegisterController::class, 'store'])->name('admin.register');
     });
     
 // ユーザーログイン
     Route::get('user/auth/login', [LoginController::class, 'showloginForm'])->name('show.user.login');
-    Route::post('user/auth/login', [LoginController::class, 'login'])->name('login.user.login');
-    Route::get('user/auth/logout', [LoginController::class, 'logout'])->name('login.user.logout');
+    Route::post('user/auth/login', [LoginController::class, 'login'])->name('user.login');
+    Route::get('user/auth/logout', [LoginController::class, 'logout'])->name('user.logout');
 
 
 // ユーザーカリキュラム画面
@@ -59,7 +61,8 @@ Route::controller(CurriculumController::class)
     ->prefix('/user/curriculum_list')
     ->group(function(){
         Route::get('/','showCurriculumLists')->name('show.curriculum');
-        Route::get('/{id}','searchCurriculumLists')->name('search.curriculum');
+        Route::get('grade/{id}','moveGradeCurriculumLists')->name('move.grade.curriculum');
+        Route::get('month/{id}','moveMonthCurriculumLists')->name('move.month.curriculum');
         Route::get('delivery/{id}','showCurriculumDetail')->name('show.detail');
     });
 

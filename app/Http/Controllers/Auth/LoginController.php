@@ -28,7 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/user/curriculum_lists';
+    protected $redirectTo = '/user/curriculum_list';
 
 
     public function showloginForm()

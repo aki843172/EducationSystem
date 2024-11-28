@@ -37,7 +37,6 @@
                 @foreach($curriculums as $curriculum)
                     <a class="curriculum-item border border-secondary border-2 d-inline-flex">
                         <span>
-                            <img src="{{ asset($curriculum->thumbnail) }}" alt="商品画像" width="100">
                         </span>
                         <span class="curriculum-item-title">
                             {{ $curriculum->title }}
@@ -78,7 +77,7 @@
             // ajax処理
             $.ajax({
                 type: 'GET',
-                url: 'user/curriculum_list/'+grade_id,
+                url: 'curriculum_list/grade/'+grade_id,
                 dataType: 'json',
                 data: { 'id':grade_id } //値をControllerへ渡す
                 })
@@ -93,7 +92,7 @@
                     //  一覧表示する
                     $('.curriculum-item').append
                     (
-                    '<span>' + '<img src="/public/'+ val.thumbnail +'" alt="サムネイル" width="100">' + '</span>'+
+                    // '<span>' + '<img src="/public/'+ val.thumbnail +'" alt="サムネイル" width="100">' + '</span>'+
                     '<span>' + val.title + '</span>'+
                     '<span>' + val.description + '</span>'
                     )
@@ -103,7 +102,7 @@
         
             //失敗したとき
             .fail(function(){
-                console.log('該当するカリキュラムはありません');
+                console.log('お前に受けさすカリキュラムは ねぇ！');
             });
         
         })
@@ -125,13 +124,14 @@
             // currentMonthが1〜11だったら、+1する
             else if(1 <= currentMonth <= 11){
                 currentMonth += 1;
+                $('#goBack').prop("disabled", false);
             }
 
             $.ajax({
                 type: 'GET',
-                url: 'user/curriculum_list/search',
+                url: 'curriculum_list/month/'+currentMonth,
                 dataType: 'json',
-                data: { grade_id,currentMonth } //値をControllerへ渡す
+                data: { 'date':currentMonth } //値をControllerへ渡す
                 })
 
             // 成功した場合
@@ -168,18 +168,20 @@
 
             // currentMonthが1だったら、ボタンを無効にする
             if(currentMonth === 1){
+                alert('最初の月です');
                 $('#goBack').prop("disabled", true);
             }
             // currentMonthが2〜12だったら、-1する
             else if(2 <= currentMonth <= 12){
                 currentMonth -= 1;
+                $('#goNext').prop("disabled", false);
             }
 
             $.ajax({
                 type: 'GET',
-                url: 'user/curriculum_list/search',
+                url: 'curriculum_list/month/'+currentMonth,
                 dataType: 'json',
-                data: { grade_id,currentMonth } //値をControllerへ渡す
+                data: { 'date':currentMonth } //値をControllerへ渡す
                 })
 
             // 成功した場合
@@ -199,11 +201,14 @@
                  }
                 )
                  })
+                 
+                 
         
             //失敗したとき
             .fail(function(){
-                console.log('該当するカリキュラムはありません');
+                console.log('ダメだー！');
             });
+            
             
             });
         });

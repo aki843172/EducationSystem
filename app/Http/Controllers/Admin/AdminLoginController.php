@@ -11,7 +11,7 @@ use Laravel\Ui\Presets\React;
 
 
 
-class LoginController extends Controller
+class AdminLoginController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -42,24 +42,29 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest:admins')->except('logout');
+        $this->middleware('guest:admin')->except('logout');
+        // $this->middleware('auth:admin')->only('logout');
+
     }
 
+    public function showloginForm()
+    {
+        return view('admin.auth.login');
+    }
     
-    protected function guard()                              // guardは「ログイン機構の種類」ログイン画面の数だけguardがある。
-    {                                                       //追記
-        return Auth::guard('admins');                        //追記
+    protected function guard() // guardは「ログイン機構の種類」ログイン画面の数だけguardがある。
+    {
+        return Auth::guard('admin');
     }
 
-    public function login(Request $request){
+    public function login(LoginRequest $request){
 
         $login_info = $request->only(['email','password']);
-        $admins = Auth::all();
 
         // ユーザー情報が見つかったらログイン
-        if(Auth::guard('admins')->attempt($login_info)){
+        if(Auth::guard('admin')->attempt($login_info)){
             // ログイン後に表示するページにリダイレクト
-            return redirect()->to_route('show.top',compact('admins'))->with([
+            return redirect()->route('admin.top')->with([
                 'message'=>'ログインしました',
             ]);
         } else {
@@ -72,8 +77,8 @@ class LoginController extends Controller
 
     // ログアウト処理
     public function logout(Request $request){
-        $this->performLogout($request);                     //追記
-        return to_route('show.admin.login');
+        $this->performLogout($request);
+        return redirect('admin/auth/login');
     }
 
 }

@@ -8,7 +8,7 @@
                 <div class="card-header">{{ __('管理者ログイン') }}</div>
 
                 <div class="card-body">
-                    <form method="POST" action="{{ url('admin/auth/login') }}">
+                    <form method="POST" action="{{ route('admin.login') }}">
                         @csrf
 
                         <div class="row mb-3">
@@ -57,7 +57,7 @@
                                     {{ __('ログイン') }}
                                 </button>
 
-                                <a class="btn btn-link" href="{{ url('admin/auth/passwords/reset') }}"> //修正
+                                <a class="btn btn-link" href=""> 
                                     パスワードを忘れた方はこちら
                                 </a>
                             </div>

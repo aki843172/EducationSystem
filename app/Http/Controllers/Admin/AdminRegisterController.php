@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 
-class RegisterController extends Controller
+class AdminRegisterController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -44,7 +44,7 @@ class RegisterController extends Controller
 
     protected function guard()                  //追記
     {                                           //追記
-        return Auth::guard('admins');            //追記
+        return Auth::guard('admin');            //追記
     }       
 
     /**
@@ -69,13 +69,21 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\User
      */
-    protected function create(array $data)
+    protected function store(array $data)
     {
-        return Admin::create([
+
+        $admin = Admin::create([
             'kana' => $data['kana'],
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        // 
+        event(new Registered($admin));
+
+        // 管理者としてログイン試行できる
+        Auth::guard('admin')->login($admin);
+
+        return redirect('admin.top');
     }
 }

@@ -70,7 +70,7 @@
         </div>
 
     <h1>ログイン</h1>
-    <form method="POST" action="#" novalidate>
+    <form method="POST" action="{{ route('user.login') }}" novalidate>
         @csrf
 
         

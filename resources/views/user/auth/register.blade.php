@@ -71,7 +71,7 @@
 
 <div class="container">
     <h1>新規会員登録</h1>
-    <form method="POST" action="{{ route('user.show.register') }}"novalidate>
+    <form method="POST" action="{{ url('admin/auth/register') }}">
         @csrf
 
 
