@@ -4,6 +4,7 @@ namespace app\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -24,13 +25,31 @@ class RegisterController extends Controller
 
     use RegistersUsers;
 
-   
+    /**
+     * Where to redirect users after registration.
+     *
+     * @var string
+     */
+    // protected $redirectTo = '/user/auth/login';
+
+
+        /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest');
+    }
+
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function  showRegisterForm()
+    public function showRegisterForm()
     {
         return view('user.auth.register');
     }
@@ -43,7 +62,7 @@ class RegisterController extends Controller
         // ユーザーを作成
         $user = $this->create($request->all());
 
-        return redirect()->route('user.show.login');
+        return redirect()->route('show.curriculum');
     }
 
 
@@ -52,13 +71,13 @@ class RegisterController extends Controller
         // バリデーションルールの定義
         $request->validate([
             'name' => 'required|string|min:1|max:255',
-            'name_kana' => 'required|string|min:1|max:255|regex:/^[ァ-ヶー]+$/u', // カタカナのみ
+            'kana' => 'required|string|min:1|max:255|regex:/^[ァ-ヶー]+$/u', // カタカナのみ
             'email' => 'required|string|email|max:255',
             'password' => 'required|string|min:8|max:255|alpha_num', // 半角英数字
             'password_confirmation' => 'required|string|same:password', // 確認用パスワード
         ], [
             'name.required' => '*ユーザーネームを入力してください。',
-            'name_kana.required' => '*カナを入力してください。',
+            'kana.required' => '*カナを入力してください。',
             'name_kana.regex' => '*カナはカタカナで入力してください。',
             'email.required' => '*メールアドレスを入力してください。',
             'password.required' => '*パスワードを入力してください。',
@@ -79,7 +98,7 @@ class RegisterController extends Controller
     {
         return User::create([
             'name' => $data['name'],
-            'name_kana' => $data['name_kana'],
+            'kana' => $data['kana'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'grade_id' => 1, // デフォルトの学年IDを設定

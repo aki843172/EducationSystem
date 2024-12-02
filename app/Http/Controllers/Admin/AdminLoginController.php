@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Ui\Presets\React;
 
@@ -28,14 +29,8 @@ class AdminLoginController extends Controller
         logout as performLogout;                            //追記
     }                               
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/admin/top';
 
-    /**
+        /**
      * Create a new controller instance.
      *
      * @return void
@@ -43,28 +38,28 @@ class AdminLoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest:admin')->except('logout');
-        // $this->middleware('auth:admin')->only('logout');
-
+        $this->middleware('auth:admin')->only('logout');
     }
 
-    public function showloginForm()
-    {
-        return view('admin.auth.login');
-    }
-    
     protected function guard() // guardは「ログイン機構の種類」ログイン画面の数だけguardがある。
     {
         return Auth::guard('admin');
     }
 
-    public function login(LoginRequest $request){
+
+    public function showloginForm()
+    {
+        return view('admin.auth.login');
+    }
+
+    public function login(Request $request){
 
         $login_info = $request->only(['email','password']);
 
         // ユーザー情報が見つかったらログイン
         if(Auth::guard('admin')->attempt($login_info)){
             // ログイン後に表示するページにリダイレクト
-            return redirect()->route('admin.top')->with([
+            return redirect()->route('show.admin.top')->with([
                 'message'=>'ログインしました',
             ]);
         } else {
@@ -74,11 +69,19 @@ class AdminLoginController extends Controller
         ]);
     }
     }
+    
+    /**
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
+    protected $redirectTo = '/admin/top';
+
 
     // ログアウト処理
-    public function logout(Request $request){
-        $this->performLogout($request);
+    public function logout(){
+        Auth::logout();
         return redirect('admin/auth/login');
-    }
+}
 
 }

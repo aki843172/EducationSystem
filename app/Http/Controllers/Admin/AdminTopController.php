@@ -10,14 +10,14 @@ use Illuminate\Support\Facades\Auth;
 class TopController extends Controller
 {
 
-    // function showTop(){
-    //     if (Auth::check()) {
-    //         $admins = Auth::all();
-    //         return to_route('show.top', compact('admins'));
-    //     }
-    //     else
-    //     {
-    //         return to_route('login');
-    //     }
-    // }
+    function showTop(){
+        if (Auth::check()) {
+            $admins = Auth::all();
+            return route('admin.top', compact('admins'));
+        }
+        else
+        {
+            return route('admin.login');
+        }
+    }
 }

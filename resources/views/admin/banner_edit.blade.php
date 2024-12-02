@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="ms-4">
-    <a href="{{ route('show.top') }}">←戻る</a>
+    <a href="{{ route('show.admin.top') }}">←戻る</a>
 
     <form action="{{ route('save.banners') }}" method="post" enctype="multipart/form-data">
         @csrf

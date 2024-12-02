@@ -4,13 +4,7 @@
     <a href="#" class="btn btn-secondary">授業進捗</a>
     <a href="#" class="btn btn-secondary">プロフィール設定</a>
 
-        <a class="dropdown-item btn btn-warning" href="{{ route('logout') }}"
-            onclick="event.preventDefault();
-            document.getElementById('logout-form').submit();">
-            {{ __('ログアウト') }}
-        </a>
+    <a href="{{ route('user.logout') }}" > ログアウト </a>
 
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-        </form>
+    <p>ユーザーネーム：{{ Auth::user()->name }}</p>
 </div>

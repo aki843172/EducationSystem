@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -66,5 +67,11 @@ class LoginController extends Controller
             'password' => ['パスワードが一致しません。'],
         ]);
     }
+
+     // ログアウト処理
+     public function logout(){
+        Auth::logout();
+        return redirect('user/auth/login');
+}
 
 }

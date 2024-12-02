@@ -30,4 +30,31 @@ class LoginRequest extends FormRequest
             'password' => 'max:1000',
         ];
     }
+         /**
+     * 項目名
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'name' => '名前',
+            'kana' => 'カナ',
+            'email' => 'メールアドレス',
+            'password' => 'パスワード',
+        ];
+    }
+    /**
+     * エラーメッセージ
+     *
+     * @return array
+     */
+    public function messages() {
+        return [
+            'name.required' => ':attributeは必須項目です。',
+            'name.max' => ':attributeは:max字以内で入力してください。',
+            'email.required' => ':attributeは必須項目です。',
+            'email.max' => ':attributeは:max字以内で入力してください。'
+        ];
+    }
 }

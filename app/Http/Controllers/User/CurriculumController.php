@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CurriculumRequest;
 use App\Models\Curriculum;
@@ -17,34 +18,43 @@ class CurriculumController extends Controller
 
         // ログインユーザーの学年
         // $user = Auth::user();
-        $grade_id = 1; //仮で1年生とする
+        // $grade_id = $user->id; //仮で1年生とする
+        $grade_id = 1;
 
         // 今の年月日を取得
-        $currentDate = date('Y-m-d H:i:s');
+        $currentDateTime = date('Y-m-d H:i:s');
+        $currentYear = date('Y');
+        $currentMonth = date('m');
 
         // deliverytimesテーブルの情報を取得
         $delivery_times = DeliveryTime::query();
 
         // curriculumsテーブルにdelivery_timesテーブルを合体する
-        $curriculums = Curriculum::join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id')->get();
+        $curriculums = Curriculum::query();
+        $curriculums->select('curriculums.*', 'delivery_from','delivery_to')->join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id');
+
+        $curriculums->where('grade_id','=', $grade_id);
 
         // 配列内の数だけ処理をする
         foreach($curriculums as $curriculum){
-            // ユーザーの学年に一致するものを取得
-            $data = $curriculum->where('grade_id','=',$grade_id)->get();
 
-            // 常時配信フラグがオフの時
-            if($data['always_delivery_flg'] === 0){
-                $data->where('delivery_from','<=', $currentDate)->get();
-                $data->where('delivery_to','>=',$currentDate)->get();
+                // 常時配信フラグがオフの時
+                if($curriculum->always_delivery_flg === 0){
+                    $curriculum->where('delivery_from','<=', $currentDateTime);
+                    $curriculum->where('delivery_to','>=',$currentDateTime);
+
+                    $curriculums = $curriculum;
+                    }
+                // オンの時は特になにもしない
+                if($curriculum->always_delivery_flg === 1){
+                    $curriculums = $curriculum;
                 }
-            // オンの時は特になにもしない
-        }
-    
-        // 絞り込んだデータをshow_curriculumsへ入れる
-        // $curriculums = $data->get();
+            }
+        
+        // 絞り込んだデータをresultへ入れる
+        $result = $curriculums->get();
 
-        return view ('user.curriculum_list', compact('curriculums'));
+        return view ('user.curriculum_list', compact('result','currentYear','currentMonth'));
     }
 
 
@@ -54,31 +64,25 @@ class CurriculumController extends Controller
         $curriculums = Curriculum::query();
         $delivery_times = DeliveryTime::query();
 
-        $grade_id = $id->grade_id;
-        dd($grade_id);
-
-
         // 今の年月日を取得
-        $currentDate = date('Y-m-d');
+        $currentDate = date('Y-m-d H:i:s');
 
         // curriculumsテーブルにdelivery_timesテーブルを合体する
-        $curriculums->join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id');
+        $curriculums->join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id')->get();
 
         
         // grade_idが指定されている場合、その学年のカリキュラムを取得
-        if($grade_id){
-            $curriculums->where('grade_id', '=', $grade_id)->get();
-        }
+        $curriculums->where('grade_id', '=', $id);
+        
 
         // もし上記カリキュラムの常時配信がOFFであれば、配信期間に合うものを取得
         if($curriculums->always_delivery_flg == 0){
-            $curriculums->whereDate('delivery_from','<=', $currentDate)->whereDate('delivery_to','>=',$currentDate)->get();
+            $curriculums->where('delivery_from','<=', $currentDate)->where('delivery_to','>=',$currentDate);
         };
         
 
         // 絞り込んだデータをshow_curriculumsへ入れる
         $show_curriculums = $curriculums->get();
-        echo($show_curriculums);
 
         // データをjsonで返す
         return response()->json($show_curriculums);
@@ -86,27 +90,23 @@ class CurriculumController extends Controller
 
 
     // 矢印ボタンを押した　月移動機能
-    function moveMonthCurriculumLists(CurriculumRequest $request){
+    function moveMonthCurriculumLists($data){
 
         $curriculums = Curriculum::query();
-        $delivery_times = DeliveryTime::query();
-        $currentDate = $request->currentMonth;
-        dd($currentDate);
 
         // curriculumsテーブルにdelivery_timesテーブルを合体する
         $curriculums->join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id');
-
+        echo $curriculums;
         
         // grade_idが指定されている場合、その学年のカリキュラムを取得
-        if($request->grade_id){
-            $curriculums->where('grade_id', '=', $request->grade_id);
+        if($data){
+            $curriculums->where('grade_id', '=', $data->grade_id);
         }
 
         // もし上記カリキュラムの常時配信がOFFであれば、配信期間に合うものを取得
         if($curriculums->always_delivery_flg == 0){
-            $curriculums->where('delivery_from','<=', $currentDate)->where('delivery_to','>=',$currentDate)->get();;
+            $curriculums->where('delivery_from','<=', $data->date)->where('delivery_to','>=',$data->date);
         };
-        
 
         // 絞り込んだデータをshow_curriculumsへ入れる
         $show_curriculums = $curriculums->get();

@@ -60,16 +60,13 @@
 </head>
 <body>
 
-    <title>ログイン</title>
-
-
     <div class="container">
 
         <div class="register-link">
             <a href="#">新規会員登録はこちら</a>
         </div>
 
-    <h1>ログイン</h1>
+    <h1>ユーザーログイン</h1>
     <form method="POST" action="{{ route('user.login') }}" novalidate>
         @csrf
 

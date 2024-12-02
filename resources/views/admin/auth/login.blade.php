@@ -1,8 +1,8 @@
 @extends('layouts.app')
-@extends('layouts.login_header')
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+    <a href="{{ route('admin.register') }}">新規登録画面</a>
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('管理者ログイン') }}</div>
@@ -57,7 +57,7 @@
                                     {{ __('ログイン') }}
                                 </button>
 
-                                <a class="btn btn-link" href=""> 
+                                <a class="btn btn-link" href="#"> 
                                     パスワードを忘れた方はこちら
                                 </a>
                             </div>

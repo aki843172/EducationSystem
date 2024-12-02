@@ -70,13 +70,13 @@
 
 
 <div class="container">
-    <h1>新規会員登録</h1>
+    <h1>ユーザー新規会員登録</h1>
     <form method="POST" action="{{ url('admin/auth/register') }}">
         @csrf
 
 
         <div class="login-link">
-            <a href="{{ route('user.show.login') }}">ログインはこちら</a>
+            <a href="{{ route('user.login') }}">ログインはこちら</a>
         </div>
         <div class="form-group">
             <label class="label" for="name">ユーザーネーム</label>
@@ -89,9 +89,9 @@
         </div>
 
         <div class="form-group">
-            <label class="label" for="name_kana">カナ</label>
-            <input type="text" id="name_kana" name="name_kana" class="form-control" required autofocus>
-            @error("name_kana")
+            <label class="label" for="kana">カナ</label>
+            <input type="text" id="kana" name="kana" class="form-control" required autofocus>
+            @error("kana")
             <span class="alert alert-danger" role="alert">
                 <strong>{{ $message }}</strong>
             </span>

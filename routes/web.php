@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\AdminRegisterController;
 use App\Http\Controllers\Admin\AdminLoginController;
+use app\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\User\CurriculumController;
 
 /*
@@ -31,39 +32,43 @@ Auth::routes();
 //     return redirect()->route('login')->middleware('auth');
 // });
 
-// Admin用コントローラーとUser用コントローラーを書き分ける
-
 
 // 管理者認証機能
 Route::prefix('admin')->group(function () {
     // ログイン画面
-    Route::view('auth/login', 'admin.auth.login')->name('show.admin.login');
-    // ログイン後の画面
-    Route::view('top','admin.top')->middleware(['auth:admin'])->name('show.admin.top');
+    Route::get('auth/login', [AdminLoginController::class, 'showloginForm'])->name('show.admin.login');
+    // Route::view('auth/login', 'admin.auth.login')->name('show.admin.login');
     // ログイン送信
     Route::post('auth/login', [AdminLoginController::class,'login'])->name('admin.login');
-    // ログアウト後の画面
-    Route::get('auth/logout', [AdminLoginController::class, 'logout'])->name('admin.logout');
-    // 管理者新規登録画面
-    Route::view('auth/register', 'admin.auth.register');
-    // 管理者登録機能
-    Route::post('auth/register', [AdminRegisterController::class, 'store'])->name('admin.register');
-    });
     
-// ユーザーログイン
+    Route::view('/top','admin.top')->middleware(['auth:admin'])->name('show.admin.top');
+    // 管理者 新規登録画面
+    Route::view('auth/register', 'admin.auth.register');
+    // 管理者 新規登録機能
+    Route::post('auth/register', [AdminRegisterController::class, 'create'])->name('admin.register');
+    });
+
+    Route::group(['middleware' => 'auth'], function(){
+        // 管理者ログアウト機能
+        Route::get('admin/auth/logout', [AdminLoginController::class,'logout'])->name('admin.logout');
+
+   });
+    
+// ユーザー認証
     Route::get('user/auth/login', [LoginController::class, 'showloginForm'])->name('show.user.login');
     Route::post('user/auth/login', [LoginController::class, 'login'])->name('user.login');
     Route::get('user/auth/logout', [LoginController::class, 'logout'])->name('user.logout');
+    Route::view('user/auth/register','user.auth.register');
 
 
 // ユーザーカリキュラム画面
 Route::controller(CurriculumController::class)
-    ->prefix('/user/curriculum_list')
+    ->prefix('user/curriculum_list')
     ->group(function(){
-        Route::get('/','showCurriculumLists')->name('show.curriculum');
-        Route::get('grade/{id}','moveGradeCurriculumLists')->name('move.grade.curriculum');
+        Route::get('/','showCurriculumLists')->middleware(['auth:web'])->name('show.curriculum');
+        Route::get('{id}','moveGradeCurriculumLists')->name('move.grade.curriculum');
         Route::get('month/{id}','moveMonthCurriculumLists')->name('move.month.curriculum');
-        Route::get('delivery/{id}','showCurriculumDetail')->name('show.detail');
+        Route::get('delivery/{id}','showCurriculumDetail')->middleware(['auth:web'])->name('show.curriculum.detail');
     });
 
 // 管理者バナー編集画面

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
+use App\Http\Requests\LoginRequest;
 use App\Models\Admin;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -30,7 +30,7 @@ class AdminRegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/admin/top';
+    // protected $redirectTo = '/admin/top';
 
     /**
      * Create a new controller instance.
@@ -53,33 +53,32 @@ class AdminRegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'kana' => ['required', 'string', 'max:255'],
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-    }
+    // protected function validator(array $data)
+    // {
+    //     return Validator::make($data, [
+    //         'kana' => ['required', 'string', 'max:255'],
+    //         'name' => ['required', 'string', 'max:255'],
+    //         'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+    //         'password' => ['required', 'string', 'min:8', 'confirmed'],
+    //     ]);
+    // }
 
     /**
      * Create a new user instance after a valid registration.
      *
      * @param  array  $data
-     * @return \App\Models\User
+     * @return \App\Models\Admin
      */
-    protected function store(array $data)
+    // protected function create(array $data)
+    protected function create(LoginRequest $request)
     {
 
         $admin = Admin::create([
-            'kana' => $data['kana'],
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'kana' => $request['kana'],
+            'name' => $request['name'],
+            'email' => $request['email'],
+            'password' => Hash::make($request['password']),
         ]);
-        // 
-        event(new Registered($admin));
 
         // 管理者としてログイン試行できる
         Auth::guard('admin')->login($admin);

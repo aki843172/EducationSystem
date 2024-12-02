@@ -4,13 +4,7 @@
     <a href="#" class="btn btn-secondary">お知らせ管理</a>
     <a href="banner_edit" class="btn btn-secondary">バナー管理</a>
 
-        <a class="dropdown-item btn btn-warning" href="{{ route('logout') }}"
-            onclick="event.preventDefault();
-            document.getElementById('logout-form').submit();">
-            {{ __('ログアウト') }}
-        </a>
+    <a href="{{ route('admin.logout') }}">ログアウト</a>
+    <p>ユーザーネーム：{{ Auth::user()->name }}</p>
 
-        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-            @csrf
-        </form>
 </div>

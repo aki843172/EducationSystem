@@ -3,6 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
+    <a href="{{ route('admin.login')}}">ログイン画面</a>
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">{{ __('管理者新規登録') }}</div>
@@ -18,6 +19,20 @@
                                 <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
 
                                 @error('name')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <label for="kana" class="col-md-4 col-form-label text-md-end">{{ __('カナ') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="kana" type="text" class="form-control @error('kana') is-invalid @enderror" name="kana" value="{{ old('kana') }}" required autocomplete="kana" autofocus>
+
+                                @error('kana')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
