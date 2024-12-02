@@ -67,7 +67,7 @@ Route::controller(CurriculumController::class)
     ->group(function(){
         Route::get('/','showCurriculumLists')->middleware(['auth:web'])->name('show.curriculum');
         Route::get('{id}','moveGradeCurriculumLists')->name('move.grade.curriculum');
-        Route::get('month/{id}','moveMonthCurriculumLists')->name('move.month.curriculum');
+        Route::get('month/{currentMonth}','moveMonthCurriculumLists')->name('move.month.curriculum');
         Route::get('delivery/{id}','showCurriculumDetail')->middleware(['auth:web'])->name('show.curriculum.detail');
     });
 

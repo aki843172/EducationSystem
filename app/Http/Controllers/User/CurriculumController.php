@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CurriculumRequest;
 use App\Models\Curriculum;
 use App\Models\DeliveryTime;
 use App\Models\User;
-use Illuminate\Support\Facades\Date;
 
 class CurriculumController extends Controller
 {
@@ -17,9 +15,8 @@ class CurriculumController extends Controller
     function showCurriculumLists(CurriculumRequest $request){
 
         // ログインユーザーの学年
-        // $user = Auth::user();
-        // $grade_id = $user->id; //仮で1年生とする
-        $grade_id = 1;
+        $user = Auth::user();
+        $grade_id = $user->id; 
 
         // 今の年月日を取得
         $currentDateTime = date('Y-m-d H:i:s');
@@ -33,13 +30,14 @@ class CurriculumController extends Controller
         $curriculums = Curriculum::query();
         $curriculums->select('curriculums.*', 'delivery_from','delivery_to')->join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id');
 
+        // 学年が一致するデータを取得
         $curriculums->where('grade_id','=', $grade_id);
 
-        // 配列内の数だけ処理をする
-        foreach($curriculums as $curriculum){
 
+        foreach($curriculums as $curriculum){
                 // 常時配信フラグがオフの時
                 if($curriculum->always_delivery_flg === 0){
+                    // 配信期間に一致するデータを取得
                     $curriculum->where('delivery_from','<=', $currentDateTime);
                     $curriculum->where('delivery_to','>=',$currentDateTime);
 
@@ -72,17 +70,19 @@ class CurriculumController extends Controller
 
         
         // grade_idが指定されている場合、その学年のカリキュラムを取得
-        $curriculums->where('grade_id', '=', $id);
+        $curriculums->where('grade_id', '=', $id->id);
         
 
         // もし上記カリキュラムの常時配信がOFFであれば、配信期間に合うものを取得
         if($curriculums->always_delivery_flg == 0){
-            $curriculums->where('delivery_from','<=', $currentDate)->where('delivery_to','>=',$currentDate);
+            $curriculums->where('delivery_from','<=', $currentDate);
+            $curriculums->where('delivery_to','>=',$currentDate);
         };
         
 
         // 絞り込んだデータをshow_curriculumsへ入れる
         $show_curriculums = $curriculums->get();
+        var_dump($show_curriculums);
 
         // データをjsonで返す
         return response()->json($show_curriculums);
@@ -110,7 +110,6 @@ class CurriculumController extends Controller
 
         // 絞り込んだデータをshow_curriculumsへ入れる
         $show_curriculums = $curriculums->get();
-        echo($show_curriculums);
 
         // データをjsonで返す
         return response()->json($show_curriculums);

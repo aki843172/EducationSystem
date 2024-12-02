@@ -83,11 +83,11 @@
             // ajax処理
             $.ajax({
                 type: 'GET',
-                url: 'user/curriculum_list/'+grade_id,
+                url: 'curriculum_list/'+grade_id,
                 dataType: 'json',
-                data: { 'id':grade_id,
-                    'method': 'GET'
-                 } //値をControllerへ渡す
+                data: {'id':grade_id}
+                
+                //値をControllerへ渡す
                 })
 
             // 成功した場合
@@ -199,7 +199,7 @@
 
             $.ajax({
                 type: 'GET',
-                url: 'curriculum_list/month/'+currentMonth,
+                url: 'curriculum_list/'+currentMonth,
                 dataType: 'json',
                 data: { 'date':currentMonth,
                     'grade_id': grade } //値をControllerへ渡す
