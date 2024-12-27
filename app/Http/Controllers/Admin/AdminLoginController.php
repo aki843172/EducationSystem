@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
-use Illuminate\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
-use Laravel\Ui\Presets\React;
 
 
 
@@ -47,27 +45,31 @@ class AdminLoginController extends Controller
     }
 
 
-    public function showloginForm()
+    public function showLoginForm()
     {
         return view('admin.auth.login');
     }
 
-    public function login(Request $request){
-
-        $login_info = $request->only(['email','password']);
-
-        // ユーザー情報が見つかったらログイン
-        if(Auth::guard('admin')->attempt($login_info)){
-            // ログイン後に表示するページにリダイレクト
-            return redirect()->route('show.admin.top')->with([
-                'message'=>'ログインしました',
-            ]);
-        } else {
-        // ログインできなかったら元のページに戻る
-        return back()->withErrors([
-            'message' => ['ログインに失敗しました'],
+    protected function validateLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string|min:6',
+        ],
+        [
+            'email.required' => '*メールアドレスは必須項目です。',
+            'email.email' => '*正しいメールアドレスを入力してください。',
+            'password.required' => '*パスワードは必須項目です。',
+            'password.min' => '*パスワードは最低6文字以上で入力してください。',
         ]);
     }
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        throw ValidationException::withMessages([
+            'email' => ['メールアドレスが一致しません。'],
+            'password' => ['パスワードが一致しません。'],
+        ]);
     }
     
     /**
@@ -75,13 +77,16 @@ class AdminLoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/admin/top';
+    // protected $redirectTo = '/admin/top';
 
 
     // ログアウト処理
-    public function logout(){
-        Auth::logout();
-        return redirect('admin/auth/login');
+    public function logout(Request $request){
+        Auth::guard('admin')->logout(); // マルチログインの場合、guard指定が必要
+        $request->session()->invalidate(); // セッションを無効化
+        $request->session()->regenerateToken(); // CSRFトークンを再生成
+
+        return redirect()->route('show.admin.login')->with('message', 'ログアウトしました');
 }
 
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
+use Illuminate\Http\Request;
 use App\Models\Admin;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -23,29 +24,44 @@ class AdminRegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    // use RegistersUsers;
 
     /**
      * Where to redirect users after registration.
      *
      * @var string
      */
-    // protected $redirectTo = '/admin/top';
+    protected $redirectTo = '/admin/top';
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    // public function __construct()
+    // {
+    //     $this->middleware('guest:admin');
+    // }
+
+    // protected function guard()
+    // {
+    //     return Auth::guard('admin');
+    // }
+    
+    // 新規登録処理
+    public function register(Request $request)
     {
-        $this->middleware('guest:admin');
+        // バリデーション
+        $this->validateRegistration($request);
+
+        // 管理者の作成
+        $admin = $this->createAdmin($request->all());
+
+        auth('admin')->login($admin); // 管理者としてログイン
+
+        return redirect()->route('show.admin.top')->with('message', '管理者が正常に作成されました'); //ログイン後のリダイレクト
     }
 
-    protected function guard()                  //追記
-    {                                           //追記
-        return Auth::guard('admin');            //追記
-    }       
 
     /**
      * Get a validator for an incoming registration request.
@@ -53,15 +69,29 @@ class AdminRegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    // protected function validator(array $data)
-    // {
-    //     return Validator::make($data, [
-    //         'kana' => ['required', 'string', 'max:255'],
-    //         'name' => ['required', 'string', 'max:255'],
-    //         'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-    //         'password' => ['required', 'string', 'min:8', 'confirmed'],
-    //     ]);
-    // }
+
+     // バリデーションルール
+    protected function validateRegistration(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|min:1|max:255',
+            'kana' => 'required|string|min:1|max:255|regex:/^[ァ-ヶー]+$/u',
+            'email' => 'required|string|email|max:255',
+            'password' => 'required|string|min:8|max:255|alpha_num',
+            'password_confirmation' => 'required|string|same:password',
+        ],
+        [
+            'name.required' => '*名前は必須項目です。',
+            'name.required' => '*カナは必須項目です。',
+            'name.regex' => '*カタカナで入力してください。',
+            'email.required' => '*メールアドレスは必須項目です。',
+            'password.required' => '*パスワードは必須項目です。',
+            'password.min' => '*パスワードは8文字以上で入力してください。',
+            'password.alpha_num' => '*パスワードは半角で入力してください。',
+            'password_confirmation.required' => '*確認用パスワードを入力してください。',
+            'password_confirmation.same' => '*パスワードが一致しません。',
+        ]);
+    }
 
     /**
      * Create a new user instance after a valid registration.
@@ -69,20 +99,15 @@ class AdminRegisterController extends Controller
      * @param  array  $data
      * @return \App\Models\Admin
      */
-    // protected function create(array $data)
-    protected function create(LoginRequest $request)
+
+     // 管理者の作成
+    protected function createAdmin(array $data)
     {
-
-        $admin = Admin::create([
-            'kana' => $request['kana'],
-            'name' => $request['name'],
-            'email' => $request['email'],
-            'password' => Hash::make($request['password']),
+        return Admin::create([
+            'name' => $data['name'],
+            'kana' => $data['kana'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
         ]);
-
-        // 管理者としてログイン試行できる
-        Auth::guard('admin')->login($admin);
-
-        return redirect('admin.top');
     }
 }

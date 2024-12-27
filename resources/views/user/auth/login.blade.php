@@ -63,7 +63,7 @@
     <div class="container">
 
         <div class="register-link">
-            <a href="#">新規会員登録はこちら</a>
+            <a href="{{ route('show.user.register')}}">新規会員登録はこちら</a>
         </div>
 
     <h1>ユーザーログイン</h1>

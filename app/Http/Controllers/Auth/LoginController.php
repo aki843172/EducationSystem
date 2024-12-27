@@ -53,9 +53,10 @@ class LoginController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|alpha_num',
-        ], [
-            'email.required' => '*メールアドレスは入力必須項目です。',
-            'password.required' => '*パスワードは入力必須項目です。',
+        ],
+        [
+            'email.required' => '*メールアドレスは必須項目です。',
+            'password.required' => '*パスワードは必須項目です。',
             'password.alpha_num' => '*パスワードは半角英数字で入力してください。',
         ]);
     }
@@ -63,15 +64,17 @@ class LoginController extends Controller
     protected function sendFailedLoginResponse(Request $request)
     {
         throw ValidationException::withMessages([
-            'email' => [trans('auth.failed')],
+            'email' => ['メールアドレスが一致しません。'],
             'password' => ['パスワードが一致しません。'],
         ]);
     }
 
      // ログアウト処理
-     public function logout(){
-        Auth::logout();
-        return redirect('user/auth/login');
-}
+     public function logout(Request $request){
+        Auth::guard('web')->logout(); // マルチログインの場合、guard指定が必要
+        $request->session()->invalidate(); // セッションを無効化
+        $request->session()->regenerateToken(); // CSRFトークンを再生成
+    
+        return redirect()->route('show.user.login')->with('message', 'ログアウトしました');}
 
 }

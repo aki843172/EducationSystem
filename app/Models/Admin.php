@@ -2,20 +2,19 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 
-// models/userを継承する！
 
-class Admin extends User
+class Admin extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    // protected $guard = 'admin';
+    protected $guard = 'admin';
+    protected $table = 'admins';
 
     /**
      * The attributes that are mass assignable.

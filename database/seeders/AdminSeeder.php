@@ -18,14 +18,16 @@ class AdminSeeder extends Seeder
     {
         DB::table('admins')->insert([
             [
-              'kana' => 'サザエ',
+              'id' => null,
               'name' => 'サザエ',
+              'kana' => 'サザエ',
               'email' => 'sazae@gmail.com',
               'password' => Hash::make('sazaetest'),
             ],
             [
-              'kana' => 'マスオ',
+              'id' => null,
               'name' => 'マスオ',
+              'kana' => 'マスオ',
               'email' => 'masuo@gmail.com',
               'password' => Hash::make('masuotest'),
             ],

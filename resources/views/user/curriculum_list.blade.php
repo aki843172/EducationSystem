@@ -11,71 +11,78 @@
         <x-message :message="session('message')" />
         @endif
 
-    <div class="content-wrap">
-        <div class="d-flex">
-            <button id="goBack" class="btn btn-secondary">◀︎</button>
-            <div class="currentDate">{{ $currentYear .'年'. $currentMonth .'月'}}</div>
-            <button id="goNext" class="btn btn-secondary">▶︎</button>
-        </div>
-
-            <div class="d-flex">
-                <div class="col-sm-4">
-
-                    <!-- 各ボタンを押すと、指定した学年の時間割が表示される（初期表示はログインユーザーの学年のもの） -->
-                    <!-- 学年・表示期間と現在の日時に当てはまるデータを取得する -->
-                    <button type="button" data-id="1" class="btn btn-info btn-grade">小学校1年生</button>
-                    <button type="button" data-id="2" class="btn btn-info btn-grade">小学校2年生</button>
-                    <button type="button" data-id="3" class="btn btn-info btn-grade">小学校3年生</button>
-                    <button type="button" data-id="4" class="btn btn-info btn-grade">小学校4年生</button>
-                    <button type="button" data-id="5" class="btn btn-info btn-grade">小学校5年生</button>
-                    <button type="button" data-id="6" class="btn btn-info btn-grade">小学校6年生</button>
-                    <button type="button" data-id="7" class="btn btn-success btn-grade">中学校1年生</button>
-                    <button type="button" data-id="8" class="btn btn-success btn-grade">中学校2年生</button>
-                    <button type="button" data-id="9" class="btn btn-success btn-grade">中学校3年生</button>
-                    <button type="button" data-id="10" class="btn btn-primary btn-grade">高校1年生</button>
-                    <button type="button" data-id="11" class="btn btn-primary btn-grade">高校2年生</button>
-                    <button type="button" data-id="12" class="btn btn-primary btn-grade">高校3年生</button>
+            <div class="content-wrap">
+                <!-- 現在見ている学年を表示 -->
+                <div class="grade">小学1年生</div>
+                
+                <div class="d-flex">
+                    <button id="goBack" type="button" class="btn btn-secondary">◀︎</button>
+                    <div class="currentDate">{{ $datetime->format('Y').'年'.$datetime->format('m').'月' }}</div>
+                    <button id="goNext" type="button" class="btn btn-secondary">▶︎</button>
                 </div>
 
+            <div class="d-flex">
+                    <div class="col-sm-4">
+                        <!-- 各ボタンを押すと、指定した学年の時間割が表示される（初期表示はログインユーザーの学年のもの） -->
+                        <!-- 学年・表示期間と現在の日時に当てはまるデータを取得する -->
+                        <button type="button" data-id="1" class="btn btn-info btn-grade">小学校1年生</button>
+                        <button type="button" data-id="2" class="btn btn-info btn-grade">小学校2年生</button>
+                        <button type="button" data-id="3" class="btn btn-info btn-grade">小学校3年生</button>
+                        <button type="button" data-id="4" class="btn btn-info btn-grade">小学校4年生</button>
+                        <button type="button" data-id="5" class="btn btn-info btn-grade">小学校5年生</button>
+                        <button type="button" data-id="6" class="btn btn-info btn-grade">小学校6年生</button>
+                        <button type="button" data-id="7" class="btn btn-success btn-grade">中学校1年生</button>
+                        <button type="button" data-id="8" class="btn btn-success btn-grade">中学校2年生</button>
+                        <button type="button" data-id="9" class="btn btn-success btn-grade">中学校3年生</button>
+                        <button type="button" data-id="10" class="btn btn-primary btn-grade">高校1年生</button>
+                        <button type="button" data-id="11" class="btn btn-primary btn-grade">高校2年生</button>
+                        <button type="button" data-id="12" class="btn btn-primary btn-grade">高校3年生</button>
+                    </div>
+
                 <div class="curriculum-list col-sm-8">
-                @foreach($result as $curriculum)
+                @foreach($filteredCurriculums as $curriculum)
                     <a class="curriculum-item border border-secondary border-2 d-inline-flex">
-                        <span>
-                        </span>
-                        <span class="curriculum-item-title">
+                        <div class="curriculum-item-title">
                             {{ $curriculum->title }}
-                        </span>
-                        <span class="curriculum-item-schedule">
+                        </div>
+                        <div class="curriculum-item-schedule">
                             {{ $curriculum->description }}
-                        </span>
+                        </div>
+                        <div>
+                            {{ $curriculum->delivery_from }}
+                        </div>
+                        <div>
+                            {{ $curriculum->delivery_to }}
+                        </div>
                     </a>
                 @endforeach
-            </div>
+                </div>
+            </div><!-- content-wrap -->
     </div>
-</div>
 
-<script type="text/javascript">
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        }
-    });
-    
-    // 今の月
-    var currentMonth = new Date().getMonth()+1;
+    <script type="text/javascript">
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        });
 
 
     // 学年ボタンを押した時
     $(function(){
-        $('.btn-grade').on('click',function(e){
-            // $(document).on('click',".btn-grade",function(e){
+            $(document).on('click','.btn-grade',function(e){
 
             e.preventDefault();
             $('.curriculum-item').remove();
 
-            // 選択した学年を代入
-            // var clickEle = $(this);
-            // var grade_id = clickEle.attr('id');
+            // 現在の日付（例：2024年12月）を取得
+            var currentDateTitle = $('.currentDate').text(); // "2024年12月"
+            
+            // 年月部分を「YYYY-MM」の形式に変換
+            var currentDate = currentDateTitle.replace('年', '-').replace('月', ''); // "2024-12"
+        
+
+            // 選択した学年IDを代入
             var grade_id = $(this).attr('data-id');
             console.log('学年は'+grade_id+'です');
 
@@ -83,29 +90,52 @@
             // ajax処理
             $.ajax({
                 type: 'GET',
-                url: 'curriculum_list/'+grade_id,
-                dataType: 'json',
-                data: {'id':grade_id}
-                
-                //値をControllerへ渡す
+                url: 'curriculum_list/'+grade_id+'/'+currentDate, 
+                // dataType: 'json'
+                // idはパラメータを使用して渡すので不要
                 })
 
             // 成功した場合
                 .done(function(data) {
+                    console.log('成功です');
+                    console.log(data);
+
+                    // 学年表示を空にする
+                    $('.grade').empty();
+
+                    // 最小のindex番号を見つける変数
+                    var minIndex = null;
+                    var minGrade = null;
+
 
                 // オブジェクトから絞り込みデータを一つずつ取り出す
-                $.each(data,
+                $.each(data.curriculums,
                     function(index, val) {
 
-                    //  一覧表示する
-                    $('.curriculum-item').append
+                    var grade = val.grade_id;
+
+                    // 学年を変換するための関数を呼び出す変数
+                    var gradeName = getGradeName(grade);
+
+                    // 最初のインデックスを取得する処理
+                    if (minIndex === null || index < minIndex) {
+                        minIndex = index;
+                    }
+
+                    // ループが終わった後、最小のインデックス番号の学年を表示
+                    if (index === minIndex) {
+                        $('.grade').append(gradeName);
+                    }
+
+                    //  授業データを表示する
+                    $('.curriculum-list').append
                     (
-                    // '<span>' + '<img src="/public/'+ val.thumbnail +'" alt="サムネイル" width="100">' + '</span>'+
-                    '<span>' + val.title + '</span>'+
-                    '<span>' + val.description + '</span>'
+                    '<a class="curriculum-item border border-secondary border-2 d-inline-flex">'+
+                        '<span class="curriculum-item-title">'+ val.title + '</span>'+
+                        '<span class="curriculum-item-schedule">'+ val.description + '</span>'+
+                    '</a>'
                     )
-                 }
-                )
+                 })
                  })
         
             //失敗したとき
@@ -116,56 +146,81 @@
         })
     })
 
+
     // 右矢印のボタンを押した時
     $(function(){
-        // $('#goNext').on('click', function(e){
-        $(document).on('click',"#goNext",function(e){
+        $(document).on('click','#goNext',function(e){
             e.preventDefault();
             $('.curriculum-item').remove();
 
-            // $('.currentData').empty();
-            // $('.curriculum-item').append タグ内にdateを入れる
+            const clickId = ('#goNext');
 
-                //月遷移用 仮学年
-                var grade = 1;
+                // 表示されている学年タイトルを取得
+                var gradeTitle = $('.grade').text();
+                // 学年タイトルをIDへ変換する処理を呼び出す変数
+                var grade = getGradeId(gradeTitle);
 
+                // 表示されている年月日タイトルを取得
+                var currentDateTitle = $('.currentDate').text();
+                // 年月日タイトルの数字のみ取得
+                var currentDate = currentDateTitle.replace('年', '-').replace('月', ''); // "2025-1"
 
-            // currentMonthが12だったら、ボタンを無効にする
-            if(currentMonth === 12){
-                alert('最終月です');
-                $('#goNext').prop("disabled", true);
-            }
-            // currentMonthが1〜11だったら、+1する
-            else if(1 <= currentMonth <= 11){
-                currentMonth += 1;
-                $('#goBack').prop("disabled", false);
-            }
 
             $.ajax({
                 type: 'GET',
-                url: 'curriculum_list/month/'+currentMonth,
-                dataType: 'json',
-                data: { 'date':currentMonth,
-                        'grade_id': grade
+                url: 'curriculum_list/month/'+ grade +'/'+currentDate,
+                // dataType: 'json',
+                data: { 'clickId':clickId,
                  } //値をControllerへ渡す
                 })
 
             // 成功した場合
-                .done(function(data) {
+                .done(function(data) { 
+                    console.log('成功です');
+                    console.log(data);
+
+                    // 学年表示を空にする
+                    $('.grade').empty();
+
+                    // 最小のindex番号を見つける変数
+                    var minIndex = null;
+                    var minGrade = null;
+
 
                 // オブジェクトから絞り込みデータを一つずつ取り出す
-                $.each(data,
+                $.each(data.curriculums,
                     function(index, val) {
 
+                    var grade = val.grade_id;
+
+                    // grade_idを学年へ変換するための関数を呼び出す変数
+                    var gradeName = getGradeName(grade);
+
+                    // 最初のインデックスを取得する処理（学年を1つだけ取得）
+                    if (minIndex === null || index < minIndex) {
+                        minIndex = index;
+                    }
+
+                    // ループが終わった後、最小のインデックス番号の学年を表示
+                    if (index === minIndex) {
+                        $('.grade').append(gradeName);
+                    }
+
+                    // レスポンスを受け取って、1ヶ月進んだ年月を表示
+                    var newDate = data.datetime; // "2025-01"
+                    var yearMonth = newDate.replace('-', '年') + '月'; // "2025年01月"
+                    $('.currentDate').text(yearMonth); // 新しい年月を表示
+
+
                     //  一覧表示する
-                    $('.curriculum-item').append
+                    $('.curriculum-list').append
                     (
-                    '<span>' + '<img src="/public/'+ val.thumbnail +'" alt="サムネイル" width="100">' + '</span>'+
-                    '<span>' + val.title + '</span>'+
-                    '<span>' + val.description + '</span>'
+                    '<a class="curriculum-item border border-secondary border-2 d-inline-flex">'+
+                        '<span class="curriculum-item-title">'+ val.title + '</span>'+
+                        '<span class="curriculum-item-schedule">'+ val.description + '</span>'+
+                    '</a>'
                     )
-                 }
-                )
+                 })
                  })
         
             //失敗したとき
@@ -173,8 +228,8 @@
                 console.log('失敗です！');
             });
             
-            });
-    })
+            }) 
+    }) 
 
     // 左矢印のボタンを押した時
     $(function(){
@@ -182,55 +237,122 @@
             e.preventDefault();
             $('.curriculum-item').remove();
 
-            // currentMonthが1だったら、ボタンを無効にする
-            if(currentMonth === 1){
-                alert('最初の月です');
-                $('#goBack').prop("disabled", true);
-            }
-            // currentMonthが2〜12だったら、-1する
-            else if(2 <= currentMonth <= 12){
-                currentMonth -= 1;
-                $('#goNext').prop("disabled", false);
-            }
+            const clickId = ('#goBack');
 
-                //月遷移用 仮学年
-                var grade = 1;
+                // 表示されている学年タイトルを取得
+                var gradeTitle = $('.grade').text();
+                // 学年タイトルをIDへ変換する処理を呼び出す変数
+                var grade = getGradeId(gradeTitle);
+
+                // 表示されている年月日タイトルを取得
+                var currentDateTitle = $('.currentDate').text();
+                // 年月日タイトルの数字のみ取得
+                var currentDate = currentDateTitle.replace('年', '-').replace('月', ''); // "2025-1"
 
 
             $.ajax({
                 type: 'GET',
-                url: 'curriculum_list/'+currentMonth,
-                dataType: 'json',
-                data: { 'date':currentMonth,
-                    'grade_id': grade } //値をControllerへ渡す
+                url: 'curriculum_list/month/'+ grade +'/'+currentDate,
+                // dataType: 'json',
+                data: { 'clickId':clickId,
+                } //値をControllerへ渡す
                 })
 
-            // 成功した場合
-                .done(function(data) {
+                // 成功した場合
+                .done(function(data) { 
+                    console.log('成功です');
+                    console.log(data);
+
+                    // 学年表示を空にする
+                    $('.grade').empty();
+
+                    // 最小のindex番号を見つける変数
+                    var minIndex = null;
+                    var minGrade = null;
 
                 // オブジェクトから絞り込みデータを一つずつ取り出す
-                $.each(data,
+                $.each(data.curriculums,
                     function(index, val) {
 
+                    var grade = val.grade_id;
+
+                    // grade_idを学年へ変換するための関数を呼び出す変数
+                    var gradeName = getGradeName(grade);
+
+                    // 最初のインデックスを取得する処理（学年を1つだけ取得）
+                    if (minIndex === null || index < minIndex) {
+                        minIndex = index;
+                    }
+
+                    // ループが終わった後、最小のインデックス番号の学年を表示
+                    if (index === minIndex) {
+                        $('.grade').append(gradeName);
+                    }
+
+
+                    // レスポンスを受け取って、1ヶ月戻った年月を表示
+                    var newDate = data.datetime; // "2025-01"
+                    var yearMonth = newDate.replace('-', '年') + '月'; // "2025年01月"
+                    $('.currentDate').text(yearMonth); // 新しい年月を表示
+
                     //  一覧表示する
-                    $('.curriculum-item').append
+                    $('.curriculum-list').append
                     (
-                    '<span>' + '<img src="/public/'+ val.thumbnail +'" alt="サムネイル" width="100">' + '</span>'+
-                    '<span>' + val.title + '</span>'+
-                    '<span>' + val.description + '</span>'
+                    '<a class="curriculum-item border border-secondary border-2 d-inline-flex">'+
+                        '<span class="curriculum-item-title">'+ val.title + '</span>'+
+                        '<span class="curriculum-item-schedule">'+ val.description + '</span>'+
+                    '</a>'
                     )
-                 }
-                )
-                 })
-                 
+                })
+            })
+
             //失敗したとき
             .fail(function(){
-                console.log('失敗だー！');
+                console.log('失敗！');
             });
-            
-            
-            });
-        });
+            })
+        })
+
+        // 学年タイトルをIDに変換する関数
+        function getGradeId(gradeTitle) {
+            switch (gradeTitle) {
+                case '小学1年生': return 1;
+                case '小学2年生': return 2;
+                case '小学3年生': return 3;
+                case '小学4年生': return 4;
+                case '小学5年生': return 5;
+                case '小学6年生': return 6;
+                case '中学1年生': return 7;
+                case '中学2年生': return 8;
+                case '中学3年生': return 9;
+                case '高校1年生': return 10;
+                case '高校2年生': return 11;
+                case '高校3年生': return 12;
+                default: 
+                    console.log('最初、学年を取得できませんでした');
+                    return null;
+            }
+        }
+
+        // 学年IDを名前に変換する関数
+        function getGradeName(grade) {
+            switch (grade) {
+                case 1: return '小学1年生';
+                case 2: return '小学2年生';
+                case 3: return '小学3年生';
+                case 4: return '小学4年生';
+                case 5: return '小学5年生';
+                case 6: return '小学6年生';
+                case 7: return '中学1年生';
+                case 8: return '中学2年生';
+                case 9: return '中学3年生';
+                case 10: return '高校1年生';
+                case 11: return '高校2年生';
+                case 12: return '高校3年生';
+                default: return '学年を取得できませんでした';
+            }
+        }
+
 </script>
 
 @endsection

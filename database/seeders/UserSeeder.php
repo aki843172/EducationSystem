@@ -16,18 +16,22 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('admins')->insert([
+        DB::table('users')->insert([
             [
-              'kana' => 'カツオ',
               'name' => 'カツオ',
+              'name_kana' => 'カツオ',
               'email' => 'katsuo@gmail.com',
               'password' => Hash::make('katsuotest'),
+              'profile_image' => null,
+              'grade_id' => '1',
             ],
             [
-              'kana' => 'ワカメ',
               'name' => 'ワカメ',
+              'name_kana' => 'ワカメ',
               'email' => 'wakame@gmail.com',
               'password' => Hash::make('wakametest'),
+              'profile_image' => null,
+              'grade_id' => '2',
             ],
           ]);
     }

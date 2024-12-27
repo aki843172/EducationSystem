@@ -2,123 +2,146 @@
 
 namespace App\Http\Controllers\User;
 
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CurriculumRequest;
+use Illuminate\Support\Facades\Auth;
 use App\Models\Curriculum;
-use App\Models\DeliveryTime;
-use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+
 
 class CurriculumController extends Controller
 {
 
-    function showCurriculumLists(CurriculumRequest $request){
+    function showCurriculumLists(){
 
         // ログインユーザーの学年
         $user = Auth::user();
-        $grade_id = $user->id; 
-
-        // 今の年月日を取得
-        $currentDateTime = date('Y-m-d H:i:s');
-        $currentYear = date('Y');
-        $currentMonth = date('m');
-
-        // deliverytimesテーブルの情報を取得
-        $delivery_times = DeliveryTime::query();
-
-        // curriculumsテーブルにdelivery_timesテーブルを合体する
-        $curriculums = Curriculum::query();
-        $curriculums->select('curriculums.*', 'delivery_from','delivery_to')->join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id');
-
-        // 学年が一致するデータを取得
-        $curriculums->where('grade_id','=', $grade_id);
+        $grade_id = $user->id;
 
 
-        foreach($curriculums as $curriculum){
-                // 常時配信フラグがオフの時
-                if($curriculum->always_delivery_flg === 0){
-                    // 配信期間に一致するデータを取得
-                    $curriculum->where('delivery_from','<=', $currentDateTime);
-                    $curriculum->where('delivery_to','>=',$currentDateTime);
+        // 現在の年月日をcarbonで取得
+        $datetime = new Carbon();
 
-                    $curriculums = $curriculum;
-                    }
-                // オンの時は特になにもしない
-                if($curriculum->always_delivery_flg === 1){
-                    $curriculums = $curriculum;
-                }
+        $curriculums = Curriculum::select('curriculums.*', 'delivery_from', 'delivery_to')
+            ->join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id')
+            ->where('grade_id',$grade_id)
+            ->get();
+
+
+        $filteredCurriculums = $curriculums->filter(function ($curriculum) use($datetime){ // 引数の$curriculumには、$curriculumsの各データが入っている
+            if ($curriculum->always_delivery_flg == 1) {
+                return true;
             }
-        
-        // 絞り込んだデータをresultへ入れる
-        $result = $curriculums->get();
+            if ($curriculum->always_delivery_flg == 0) {
+                // 'delivery_from' と 'delivery_to' の間に含まれる場合
+                return $datetime->between($curriculum->delivery_from, $curriculum->delivery_to); // Carbonのbetweenメソッド（指定範囲内のデータを取得）
+            }
+            return false; // それ以外の場合はスルー
+        });
 
-        return view ('user.curriculum_list', compact('result','currentYear','currentMonth'));
+        // 取得したデータをビューに渡す
+        return view('user.curriculum_list', compact('filteredCurriculums','datetime'));
     }
+
 
 
     // 学年ボタンを押下　学年移動機能
-    function moveGradeCurriculumLists($id){
+    function moveGradeCurriculumLists($grade_id, $currentDate){
 
-        $curriculums = Curriculum::query();
-        $delivery_times = DeliveryTime::query();
+        $datetime = new Carbon();
+        // currentDate を Carbon インスタンスに変換
+        $datetime = Carbon::createFromFormat('Y-m', $currentDate);  // '2024-12'形式
 
-        // 今の年月日を取得
-        $currentDate = date('Y-m-d H:i:s');
 
-        // curriculumsテーブルにdelivery_timesテーブルを合体する
-        $curriculums->join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id')->get();
+        $curriculums = Curriculum::select('curriculums.*', 'delivery_from', 'delivery_to')
+            ->join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id')
+            ->where('grade_id', $grade_id)
+            ->get();
 
-        
-        // grade_idが指定されている場合、その学年のカリキュラムを取得
-        $curriculums->where('grade_id', '=', $id->id);
-        
 
-        // もし上記カリキュラムの常時配信がOFFであれば、配信期間に合うものを取得
-        if($curriculums->always_delivery_flg == 0){
-            $curriculums->where('delivery_from','<=', $currentDate);
-            $curriculums->where('delivery_to','>=',$currentDate);
-        };
-        
+                // 常時配信フラグの条件分岐
+                $filteredCurriculums = $curriculums->filter(function ($curriculum) use ($datetime) {
+                    if ($curriculum->always_delivery_flg == 1) {
+                        // 常時配信のデータはそのまま取得
+                        return true;
+                    }
+                    if ($curriculum->always_delivery_flg == 0) {
+                        // 'delivery_from' と 'delivery_to' の間に含まれる場合のみ取得
+                        return $datetime->between($curriculum->delivery_from, $curriculum->delivery_to);
+                    }
+                    return false; // 他のケースは除外
+                });
+    
 
-        // 絞り込んだデータをshow_curriculumsへ入れる
-        $show_curriculums = $curriculums->get();
-        var_dump($show_curriculums);
+        // データが正常か確認するためログを出力
+        Log::info('Curriculums:', $filteredCurriculums->toArray());
+        Log::info('Datetime:', [$datetime->toDateTimeString()]);
 
-        // データをjsonで返す
-        return response()->json($show_curriculums);
+        // JSONレスポンスとして返す
+        return response()->json([
+            'curriculums' => $filteredCurriculums->toArray(),
+            'datetime' => $datetime->toDateTimeString(),
+            'grade_id' => $grade_id,
+        ]);
     }
 
-
     // 矢印ボタンを押した　月移動機能
-    function moveMonthCurriculumLists($data){
+    function moveMonthCurriculumLists($grade, $currentDate, Request $request){ //受け取るURLのIDは同じ順番通りに記載すべし
 
-        $curriculums = Curriculum::query();
+        $datetime = new Carbon();
+        // currentDate を Carbon インスタンスに変換
+        $datetimeOriginal = Carbon::createFromFormat('Y-m', $currentDate);  // '2024-12'形式
 
-        // curriculumsテーブルにdelivery_timesテーブルを合体する
-        $curriculums->join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id');
-        echo $curriculums;
-        
-        // grade_idが指定されている場合、その学年のカリキュラムを取得
-        if($data){
-            $curriculums->where('grade_id', '=', $data->grade_id);
+        // clickIdをリクエストから取得
+        $clickId = $request->input('clickId');
+
+        // curriculumsテーブルとdelivery_timesテーブルを結合し取得
+        $curriculums = Curriculum::select('curriculums.*', 'delivery_from', 'delivery_to')
+            ->join('delivery_times', 'curriculums.id', '=', 'delivery_times.curriculums_id')
+            ->where('grade_id', $grade)
+            ->get();
+
+        // 月を進めたり戻したりする条件分岐
+        if ($clickId === '#goNext') {
+            $datetimeOriginal->addMonth();  // 次の月に進める
+        } elseif ($clickId === '#goBack') {
+            $datetimeOriginal->subMonth();  // 前の月に戻す
         }
 
-        // もし上記カリキュラムの常時配信がOFFであれば、配信期間に合うものを取得
-        if($curriculums->always_delivery_flg == 0){
-            $curriculums->where('delivery_from','<=', $data->date)->where('delivery_to','>=',$data->date);
-        };
+        // 常時配信フラグの条件分岐
+            $filteredCurriculums = $curriculums->filter(function ($curriculum) use ($datetimeOriginal) {
+                if ($curriculum->always_delivery_flg == 1) {
+                    // 常時配信のデータはそのまま取得
+                    return true;
+                }
+                if ($curriculum->always_delivery_flg == 0) {
+                    // 'delivery_from' と 'delivery_to' の間に含まれる場合のみ取得
+                    return $datetimeOriginal->between($curriculum->delivery_from, $curriculum->delivery_to);
+                }
+                return false; // 他のケースは除外
+            });
 
-        // 絞り込んだデータをshow_curriculumsへ入れる
-        $show_curriculums = $curriculums->get();
+        // Y-m 形式で日付を取得
+        $datetime = $datetimeOriginal->format('Y-m');  // 例: '2025-01'
 
-        // データをjsonで返す
-        return response()->json($show_curriculums);
+        // データが正常か確認するためログを出力
+        Log::info('Curriculums:', $filteredCurriculums->toArray());
+        Log::info('Datetime:', [$datetime]);
+        
+        // JSONレスポンスとして返す
+        return response()->json([
+            'curriculums' => $filteredCurriculums->toArray(),
+            'datetime' => $datetime,
+            'gradeNum' => $grade
+        ]);
+
     }
 
     function showCurriculumDetail($id){
         
         // $curriculumId = 押下したカリキュラムのidを取得
-        return to_route('show.detail', $id);
+        return to_route('show.detail', ['id' => $id]);
         
     }
 

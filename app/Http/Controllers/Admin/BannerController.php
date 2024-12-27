@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Requests\BannerRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
+use Illuminate\Support\Facades\Log;
 use Psy\Readline\Hoa\Console;
 
 class BannerController extends Controller
@@ -39,6 +40,8 @@ class BannerController extends Controller
             Banner::create([
                 'image' => $img_path
             ]);
+            Log::info($image);
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();

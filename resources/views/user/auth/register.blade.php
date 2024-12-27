@@ -71,30 +71,31 @@
 
 <div class="container">
     <h1>ユーザー新規会員登録</h1>
-    <form method="POST" action="{{ url('admin/auth/register') }}">
+    <form method="POST" action="{{ url('user/auth/register') }}">
         @csrf
 
 
         <div class="login-link">
             <a href="{{ route('user.login') }}">ログインはこちら</a>
         </div>
+        
         <div class="form-group">
             <label class="label" for="name">ユーザーネーム</label>
             <input type="text" id="name" name="name" class="form-control" required autofocus>
             @error("name")
-            <span class="alert alert-danger" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
+                <span class="alert alert-danger" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
             @enderror
         </div>
 
         <div class="form-group">
-            <label class="label" for="kana">カナ</label>
-            <input type="text" id="kana" name="kana" class="form-control" required autofocus>
+            <label class="label" for="name_kana">カナ</label>
+            <input type="text" id="kana" name="name_kana" class="form-control" required autofocus>
             @error("kana")
-            <span class="alert alert-danger" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
+                <span class="alert alert-danger" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
             @enderror
         </div>
 
@@ -102,11 +103,12 @@
             <label class="label" for="email">メールアドレス</label>
             <input type="email" id="email" name="email" class="form-control" required>
             @error("email")
-            <span class="alert alert-danger" role="alert">
-                <strong>{{ $message }}</strong>
-            </span>
+                <span class="alert alert-danger" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
             @enderror
         </div>
+
         <div class="form-group">
             <label class="label" for="password">パスワード</label>
             <input type="password"  id="password" name="password" class="form-control" required>
