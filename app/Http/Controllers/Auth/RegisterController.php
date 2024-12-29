@@ -89,7 +89,7 @@ class RegisterController extends Controller
             'password.required' => '*パスワードは必須項目です。',
             'password.min' => '*パスワードは8文字以上で入力してください。',
             'password.alpha_num' => '*パスワードは半角で入力してください。',
-            'password_confirmation.required' => '*確認用パスワードを入力してください。',
+            'password_confirmation.required' => '*確認用パスワードは必須項目です。',
             'password_confirmation.same' => '*パスワードが一致しません。',
         ]);
     }

@@ -25,7 +25,15 @@ class AdminLoginController extends Controller
 
     use AuthenticatesUsers {                                //追記
         logout as performLogout;                            //追記
-    }                               
+    }
+    
+        
+    /**
+     * Where to redirect users after login.
+     *
+     * @var string
+     */
+    protected $redirectTo = '/admin/top';
 
 
         /**
@@ -71,13 +79,6 @@ class AdminLoginController extends Controller
             'password' => ['パスワードが一致しません。'],
         ]);
     }
-    
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    // protected $redirectTo = '/admin/top';
 
 
     // ログアウト処理

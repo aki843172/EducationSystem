@@ -81,7 +81,7 @@
         
         <div class="form-group">
             <label class="label" for="name">ユーザーネーム</label>
-            <input type="text" id="name" name="name" class="form-control" required autofocus>
+            <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required autofocus>
             @error("name")
                 <span class="alert alert-danger" role="alert">
                     <strong>{{ $message }}</strong>
@@ -91,8 +91,8 @@
 
         <div class="form-group">
             <label class="label" for="name_kana">カナ</label>
-            <input type="text" id="kana" name="name_kana" class="form-control" required autofocus>
-            @error("kana")
+            <input type="text" id="name_kana" name="name_kana" class="form-control" value="{{ old('name_kana') }}" required autofocus>
+            @error("name_kana")
                 <span class="alert alert-danger" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
@@ -101,7 +101,7 @@
 
         <div class="form-group">
             <label class="label" for="email">メールアドレス</label>
-            <input type="email" id="email" name="email" class="form-control" required>
+            <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required>
             @error("email")
                 <span class="alert alert-danger" role="alert">
                     <strong>{{ $message }}</strong>

@@ -21,14 +21,12 @@
 
                 @foreach($banners as $banner)
                 <li class="bannerslist-row list-unstyled bg-light">
-
                     <td><img src="{{ asset($banner->image) }}" alt="商品画像" width="100"></td>
-
-                    
                     <!-- 指定行削除ボタン -->
                     <button data-id="{{ $banner->id }}" class="bannerslist-delete">削除</button>
                 </li>
                 @endforeach
+
                 <!-- 行追加ボタン -->
                 <button type="button" class="bannerslist-add">
                     <span>+</span>
@@ -52,16 +50,17 @@
     $(function(){
         $(document).on('click','.bannerslist-add',function(){
             $('.bannerslist-table').append
-                ('<li class="bannerslist-row">' +
-                    '<input id="image" type="file" name="image" class="form-control">' +
-                    '<button class="bannerslist-delete">削除</button>' +
+                ('<li class="bannerslist-row list-unstyled bg-light">' +
+                    '<input id="image" type="file" name="image[]" class="form-control" multiple>' +
+                    '<button data-id="{{ $banner->id }}" class="bannerslist-delete">削除</button>' +
                 '</li>');
         })
     })
 
+
     // 行削除機能
     $(function(){
-        $(document).on('click','.bannerslist-delete', function(e){ //なぜここでeを持たせるのか、なぜe.preventDefault()が必要なのか
+        $(document).on('click','.bannerslist-delete', function(e){
             e.preventDefault();
             var deleteConfirm = confirm('選択した行を削除しますか？');
 
