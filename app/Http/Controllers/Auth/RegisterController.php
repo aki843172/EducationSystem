@@ -4,10 +4,8 @@ namespace app\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
@@ -30,7 +28,7 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    // protected $redirectTo = '/user/curriculum_list';
+    protected $redirectTo = '/user/curriculum_list';
 
 
         /**
@@ -90,7 +88,7 @@ class RegisterController extends Controller
             'password.min' => '*パスワードは8文字以上で入力してください。',
             'password.alpha_num' => '*パスワードは半角で入力してください。',
             'password_confirmation.required' => '*確認用パスワードは必須項目です。',
-            'password_confirmation.same' => '*パスワードが一致しません。',
+            'password_confirmation.same' => '*確認用パスワードが一致しません。',
         ]);
     }
 

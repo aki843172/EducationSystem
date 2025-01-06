@@ -3,13 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\LoginRequest;
 use Illuminate\Http\Request;
-use App\Models\Admin;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Models\Admin;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Auth;
 
 class AdminRegisterController extends Controller
 {
@@ -24,7 +21,7 @@ class AdminRegisterController extends Controller
     |
     */
 
-    // use RegistersUsers;
+    use RegistersUsers;
 
     /**
      * Where to redirect users after registration.
@@ -82,14 +79,17 @@ class AdminRegisterController extends Controller
         ],
         [
             'name.required' => '*名前は必須項目です。',
-            'name.required' => '*カナは必須項目です。',
-            'name.regex' => '*カタカナで入力してください。',
+            'name.max' => '*名前は255文字以下で入力してください。',
+            'kana.required' => '*カナは必須項目です。',
+            'kana.regex' => '*カタカナで入力してください。',
+            'kana.max' => '*カナは255文字以下で入力してください。',
             'email.required' => '*メールアドレスは必須項目です。',
+            'email.max' => '*メールアドレスは255文字以下で入力してください。',
             'password.required' => '*パスワードは必須項目です。',
             'password.min' => '*パスワードは8文字以上で入力してください。',
             'password.alpha_num' => '*パスワードは半角で入力してください。',
             'password_confirmation.required' => '*確認用パスワードは必須項目です。',
-            'password_confirmation.same' => '*パスワードが一致しません。',
+            'password_confirmation.same' => '*確認用パスワードが一致しません。',
         ]);
     }
 

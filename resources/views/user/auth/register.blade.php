@@ -111,7 +111,7 @@
 
         <div class="form-group">
             <label class="label" for="password">パスワード</label>
-            <input type="password"  id="password" name="password" class="form-control" required>
+            <input type="password" id="password" name="password" class="form-control" required>
             @error("password")
             <span class="alert alert-danger" role="alert">
                 <strong>{{ $message }}</strong>

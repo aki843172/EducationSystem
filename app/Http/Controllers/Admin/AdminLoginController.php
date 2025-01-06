@@ -23,8 +23,8 @@ class AdminLoginController extends Controller
     |
     */
 
-    use AuthenticatesUsers {                                //追記
-        logout as performLogout;                            //追記
+    use AuthenticatesUsers {
+        logout as performLogout;
     }
     
         
@@ -58,6 +58,7 @@ class AdminLoginController extends Controller
         return view('admin.auth.login');
     }
 
+
     protected function validateLogin(Request $request)
     {
         $request->validate([
@@ -79,6 +80,7 @@ class AdminLoginController extends Controller
             'password' => ['パスワードが一致しません。'],
         ]);
     }
+
 
 
     // ログアウト処理

@@ -48,6 +48,7 @@ class LoginController extends Controller
         $this->middleware('auth')->only('logout');
     }
 
+
     protected function validateLogin(Request $request)
     {
         $request->validate([
@@ -60,6 +61,7 @@ class LoginController extends Controller
             'password.alpha_num' => '*パスワードは半角英数字で入力してください。',
         ]);
     }
+
 
     protected function sendFailedLoginResponse(Request $request)
     {

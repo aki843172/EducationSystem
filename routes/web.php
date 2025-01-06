@@ -48,7 +48,7 @@ Route::prefix('admin')->group(function () {
 Route::controller(CurriculumController::class)
     ->prefix('/user/curriculum_list')
     ->group(function(){
-        Route::get('/','showCurriculumLists')->middleware(['auth:web']) ->name('show.curriculum');
+        Route::get('/','showCurriculumLists')->middleware(['auth:web'])->name('show.curriculum');
         Route::get('/{grade_id}/{currentDate}','moveGradeCurriculumLists'); //学年移動
         Route::get('/month/{grade_id}/{currentDate}','moveMonthCurriculumLists'); //月移動
         Route::get('/delivery/{id}','showCurriculumDetail')->middleware(['auth:web'])->name('show.curriculum.detail'); //カリキュラム詳細

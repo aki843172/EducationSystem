@@ -12,68 +12,53 @@
                     <form method="POST" action="{{ route('admin.register') }}">
                         @csrf
 
-                        <div class="row mb-3">
-                            <label for="name" class="col-md-4 col-form-label text-md-end">{{ __('名前') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-
-                                @error('name')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        <div class="form-group">
+                            <label class="label" for="name">ユーザーネーム</label>
+                            <input type="text" id="name" name="name" class="form-control" value="{{ old('name') }}" required autofocus>
+                            @error("name")
+                                <span class="alert alert-danger" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
-                        <div class="row mb-3">
-                            <label for="kana" class="col-md-4 col-form-label text-md-end">{{ __('カナ') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="kana" type="text" class="form-control @error('kana') is-invalid @enderror" name="kana" value="{{ old('kana') }}" required autocomplete="kana" autofocus>
-
-                                @error('kana')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        <div class="form-group">
+                            <label class="label" for="kana">カナ</label>
+                            <input type="text" id="kana" name="kana" class="form-control" value="{{ old('kana') }}" required autofocus>
+                            @error("kana")
+                                <span class="alert alert-danger" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('メールアドレス') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email">
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        <div class="form-group">
+                            <label class="label" for="email">メールアドレス</label>
+                            <input type="email" id="email" name="email" class="form-control" value="{{ old('email') }}" required>
+                            @error("email")
+                                <span class="alert alert-danger" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
                         </div>
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('パスワード') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
+                        <div class="form-group">
+                            <label class="label" for="password">パスワード</label>
+                            <input type="password" id="password" name="password" class="form-control" required>
+                            @error("password")
+                            <span class="alert alert-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
-
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('確認用パスワード') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
+                        <div class="form-group">
+                            <label class="label" for="password_confirmation">パスワード確認</label>
+                            <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" required>
+                            @error("password_confirmation")
+                            <span class="alert alert-danger" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                            @enderror
                         </div>
 
                         <div class="row mb-0">
