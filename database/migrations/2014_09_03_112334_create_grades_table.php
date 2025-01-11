@@ -21,9 +21,9 @@ return new class extends Migration
         });
 
         // 学年の名前を登録
-        DB::table('grades')->insert([
-            ['id' => 1, 'name' => '小学１年生']
-        ]);
+        //DB::table('grades')->insert([
+            //['id' => 1, 'name' => '小学１年生']
+        //]);
     }
 
     /**

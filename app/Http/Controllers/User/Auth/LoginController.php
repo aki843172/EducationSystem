@@ -28,8 +28,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
-
+    protected $redirectTo = '/user/top'; // トップページに変更
 
     public function  showloginForm()
     {
@@ -67,4 +66,9 @@ class LoginController extends Controller
         ]);
     }
 
+     // ログイン成功後のリダイレクト先を指定
+     protected function authenticated(Request $request, $user)
+     {
+         return redirect()->route('user.show.top'); // トップページにリダイレクト
+     }
 }

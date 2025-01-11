@@ -1,0 +1,26 @@
+//バナー画像用枠
+.carousel {
+    border: 1px solid #ccc; /* 灰色の境界線 */
+    text-align: center;
+    line-height: 250px;
+    padding: 20px; /* 内側の余白 */
+    margin: 20px auto; /* 上下の余白と中央寄せ */
+    max-width: 800px; /* 最大幅を設定 */
+   
+}
+
+//お知らせ見出し
+.news-heading{
+    padding-left: 250px;
+}
+//お知らせ用枠
+.list-group {
+    border: 1px solid #ccc; /* 灰色の境界線 */
+    margin: 20px auto; /* 上下の余白と中央寄せ */
+    max-width: 800px; /* 最大幅を設定 */
+    border-radius: 20px; /* 角を丸くする */
+}
+
+
+
+

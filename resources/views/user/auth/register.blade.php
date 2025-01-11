@@ -5,65 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>新規会員登録</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 100px; 
-           
-            color: gray;
-        }
-        .container {
-           
-            max-width: 600px; /* 最大幅を設定 */
-            padding: 10px;
-        }
-
-        h1 {
-            text-align: center; /* 中央揃え */
-            font-size: 50px; /* フォントサイズを大きく */
-            margin-bottom: 80px; /* 下にマージンを追加 */
-        }
-
-        .login-link {
-            color: gray;
-            position: absolute;
-            top: 100px; /* 上からの位置 */
-            right: 500px; /* 右からの位置 */
-        }
-
-        .form-group {
-            display: flex; /* Flexboxを使用 */
-            justify-content: center; /* 中央に配置 */
-            margin-bottom: 30px; /* 下にマージンを追加 */
-           
-            
-        }
-        .label {
-            text-align: right;/* 右揃え */
-            margin-right: 30px; /* ラベルと入力フィールドの間に余白を追加 */
-            width: 300px; /* ラベルの横幅を広げる */
-        }
-        
-        .btn-register {
-            font-size: 30px;
-            background-color: #FF5733; /* 背景色をオレンジに */
-            border-color: #FF5733; /* ボーダー色をオレンジに */
-            color: white; /* 文字色を白に */
-            width: 200px; /* ボタンを幅いっぱいに */
-            margin: 0 auto; /* 中央揃え */
-            display: block; /* ブロック要素にする */
-        }
-
-        .alert-danger {
-            font-size: 10px;/* フォントサイズを小さくする */
-            line-height: 1; /* 行の高さを調整 */
-            white-space: nowrap; /* テキストを折り返さない */
-        }
-
-        
-    </style>
+    @vite(['resources/sass/app.scss', 'resources/sass/register.scss', 'resources/js/app.js'])
+   
 </head>
 <body>
 

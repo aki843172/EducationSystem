@@ -1,0 +1,55 @@
+//戻るボタン
+.delivery-page__btn--back {
+    color: black;  /* 文字色を黒に */
+    background-color: transparent;  /* 背景色を透明に */
+    border: none;  /* 枠線を消す */
+    text-decoration: none;  /* 下線を消す */
+    padding: 10px 15px;  /* ボタンの大きさを調整 */
+    cursor: pointer;  /* マウスを合わせたときにカーソルが変わるように */
+}
+
+
+
+.delivery-page__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* 変更点：flex-startからcenterに */
+}
+
+.delivery-page__video {
+    flex: 1;
+}
+
+.delivery-page__button-area {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+}
+
+.delivery-page__btn--complete {
+    background-color: rgb(232, 92, 41);
+    color: white;
+    border: none;
+    padding: 15px 50px;
+    cursor: pointer;
+    font-size: 30px;
+    border-radius: 20px;
+    margin-right: 200px;
+}
+
+.delivery-page__btn--complete:hover {
+    background-color: darkorange;
+    
+}
+
+.curriculum-content__grade {
+    background-color: rgb(85, 164, 233);
+    color: white;
+    border: none; /* 'black'じゃなくて'none'の方がいいかも */
+    padding: 10px 15px; /* パディングを少し小さく */
+    font-size: 16px; /* フォントサイズを小さく */
+    border-radius: 15px; /* 角の丸みも少し小さく */
+    width: 120px; /* 幅も少し狭く */
+    margin-top: 15px; /* 上のマージンも少し小さく */
+    text-align: center; /* テキストを中央揃えに */
+}

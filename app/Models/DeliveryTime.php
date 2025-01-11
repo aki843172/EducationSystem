@@ -9,5 +9,23 @@ class DeliveryTime extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['curriculums_id', 'delivery_from', 'delivery_to'];
+    // DeliveryTimeモデル
+    protected $table = 'delivery_times';
+
+    protected $fillable = [
+        'curriculums_id', 
+        'delivery_from', 
+        'delivery_to'];
+
+     // 日付として扱うカラムを指定
+     protected $dates = [
+        'delivery_from',
+        'delivery_to'
+    ];
+
+    // Curriculumとのリレーション
+    public function curriculum()
+    {
+        return $this->belongsTo(Curriculum::class, 'curriculums_id');
+    }
 }
