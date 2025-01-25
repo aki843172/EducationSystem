@@ -29,12 +29,14 @@ class CurriculumController extends Controller
             ->get();
 
 
-        $filteredCurriculums = $curriculums->filter(function ($curriculum) use($datetime){ // 引数の$curriculumには、$curriculumsの各データが入っている
+        $filteredCurriculums = $curriculums->filter(function ($curriculum) use($datetime){ // 引数の$curriculumには、$curriculumsの各データが入
+            // 常時配信フラグオンの場合
             if ($curriculum->always_delivery_flg == 1) {
                 return true;
             }
+            // 常時配信フラグオフの場合
             if ($curriculum->always_delivery_flg == 0) {
-                // 'delivery_from' と 'delivery_to' の間に含まれる場合
+                // 配信期間内のものを返す
                 return $datetime->between($curriculum->delivery_from, $curriculum->delivery_to); // Carbonのbetweenメソッド（指定範囲内のデータを取得）
             }
             return false; // それ以外の場合はスルー

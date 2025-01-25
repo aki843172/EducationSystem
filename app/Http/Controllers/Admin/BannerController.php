@@ -7,7 +7,6 @@ use App\Http\Requests\BannerRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Banner;
 use Illuminate\Support\Facades\Log;
-use Psy\Readline\Hoa\Console;
 
 class BannerController extends Controller
 {
@@ -24,6 +23,11 @@ class BannerController extends Controller
 
         DB::beginTransaction();
         try {
+            // 画像が選択されているか確認
+            if (!$request->hasFile('image')) {
+                return back()->with('message', '画像を選択してください');
+            }
+
             if($request->hasFile('image')){
                 foreach($images as $image){
                     // 画像ファイルのファイル名を取得

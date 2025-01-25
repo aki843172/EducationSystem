@@ -3,65 +3,74 @@
 @extends('components.user_header')
 
 @section('content')
-<div class="text-center">
-    <a href="{{ route('show.curriculum') }}">←戻る</a>
-
+<div>
         <!-- メッセージ表示 -->
         @if(session('message'))
         <x-message :message="session('message')" />
         @endif
 
-            <div class="content-wrap">
-                <!-- 現在表示されている学年を表示 -->
-                <div class="grade" data-id="{{ Auth::user()->grade_id }}">
-                    <!-- 初期表示はログインユーザーの学年タイトルが入る -->
+        <div class="container">
+            <a href="{{ route('show.curriculum') }}">←戻る</a>
 
-                </div>
-                
+            <!-- 現在表示されている学年を表示 -->
+            <div class="row">
+                <p class="grade" data-id="{{ Auth::user()->grade_id }}"></p>
+            
+                <!-- 年月日タイトルを表示 -->
                 <div class="d-flex">
                     <button id="goBack" type="button" class="btn btn-secondary">◀︎</button>
                     <div class="currentDate">{{ $datetime->format('Y').'年'.$datetime->format('m').'月' }}</div>
                     <button id="goNext" type="button" class="btn btn-secondary">▶︎</button>
                 </div>
+            </div>
 
-            <div class="d-flex">
-                    <div class="col-sm-4">
-                        <!-- 各ボタンを押すと、指定した学年の時間割が表示される（初期表示はログインユーザーの学年のもの） -->
-                        <!-- 学年・表示期間と現在の日時に当てはまるデータを取得する -->
-                        <button type="button" data-id="1" class="btn btn-info btn-grade">小学校1年生</button>
-                        <button type="button" data-id="2" class="btn btn-info btn-grade">小学校2年生</button>
-                        <button type="button" data-id="3" class="btn btn-info btn-grade">小学校3年生</button>
-                        <button type="button" data-id="4" class="btn btn-info btn-grade">小学校4年生</button>
-                        <button type="button" data-id="5" class="btn btn-info btn-grade">小学校5年生</button>
-                        <button type="button" data-id="6" class="btn btn-info btn-grade">小学校6年生</button>
-                        <button type="button" data-id="7" class="btn btn-success btn-grade">中学校1年生</button>
-                        <button type="button" data-id="8" class="btn btn-success btn-grade">中学校2年生</button>
-                        <button type="button" data-id="9" class="btn btn-success btn-grade">中学校3年生</button>
-                        <button type="button" data-id="10" class="btn btn-primary btn-grade">高校1年生</button>
-                        <button type="button" data-id="11" class="btn btn-primary btn-grade">高校2年生</button>
-                        <button type="button" data-id="12" class="btn btn-primary btn-grade">高校3年生</button>
-                    </div>
-
-                <div class="curriculum-list col-sm-8">
-                @foreach($filteredCurriculums as $curriculum)
-                    <a class="curriculum-item border border-secondary border-2 d-inline-flex">
-                        <div class="curriculum-item-title">
-                            {{ $curriculum->title }}
-                        </div>
-                        <div class="curriculum-item-schedule">
-                            {{ $curriculum->description }}
-                        </div>
-                        <div>
-                            {{ $curriculum->delivery_from }}
-                        </div>
-                        <div>
-                            {{ $curriculum->delivery_to }}
-                        </div>
-                    </a>
-                @endforeach
+            <div class="row d-flex mt-5">
+                <!-- 学年移動ボタン -->
+                <div class="col-2 d-flex flex-column">
+                    <button type="button" data-id="1" class="btn btn-info btn-grade mb-1">小学校1年生</button>
+                    <button type="button" data-id="2" class="btn btn-info btn-grade mb-1">小学校2年生</button>
+                    <button type="button" data-id="3" class="btn btn-info btn-grade mb-1">小学校3年生</button>
+                    <button type="button" data-id="4" class="btn btn-info btn-grade mb-1">小学校4年生</button>
+                    <button type="button" data-id="5" class="btn btn-info btn-grade mb-1">小学校5年生</button>
+                    <button type="button" data-id="6" class="btn btn-info btn-grade mb-1">小学校6年生</button>
+                    <button type="button" data-id="7" class="btn btn-success btn-grade mb-1">中学校1年生</button>
+                    <button type="button" data-id="8" class="btn btn-success btn-grade mb-1">中学校2年生</button>
+                    <button type="button" data-id="9" class="btn btn-success btn-grade mb-1">中学校3年生</button>
+                    <button type="button" data-id="10" class="btn btn-primary btn-grade mb-1">高校1年生</button>
+                    <button type="button" data-id="11" class="btn btn-primary btn-grade mb-1">高校2年生</button>
+                    <button type="button" data-id="12" class="btn btn-primary btn-grade mb-1">高校3年生</button>
                 </div>
-            </div><!-- /content-wrap -->
-    </div>
+
+                <!-- 余白 -->
+                <div class="col-1"></div>
+
+                <div class="curriculum-list col-8 text-center">
+                    <div class="curriculum-item-row row">
+                    @foreach($filteredCurriculums as $curriculum)
+                        <!-- 時間割一覧表示 -->
+                        <div class="curriculum-item border border-secondary col-6 mb-2">
+                            <div>
+                                {{ $curriculum->title }}
+                            </div>
+                            <div>
+                                {{ $curriculum->description }}
+                            </div>
+                            <div>
+                                {{ $curriculum->delivery_from }}
+                            </div>
+                            <div>
+                                {{ $curriculum->delivery_to }}
+                            </div>
+                        </div>
+                    @endforeach
+                    </div>
+                </div>
+
+                <!-- 余白 -->
+                <div class="col-1"></div>
+
+            </div>
+        </div>
 
     <script type="text/javascript">
         $.ajaxSetup({
@@ -70,7 +79,7 @@
             }
         });
 
-        // ページを表示した際に、学年IDを学年タイトルに変換する処理
+        // ページを表示時、学年IDを学年タイトルに変換する処理
         $(document).ready(function() {
             var grade = $('.grade').attr('data-id');
             if (grade) {
@@ -81,7 +90,7 @@
                 $('.grade').append(gradeTitle);
 
             } else {
-                // 取得できなかった場合
+                // 学年を取得できなかった場合
                 console.log('学年が存在しません。');
             }
         });
@@ -95,16 +104,15 @@
             $('.curriculum-item').remove();
 
             // 現在の日付（例：2024年12月）を取得
-            var currentDateTitle = $('.currentDate').text(); // "2024年12月"
+            var currentDateTitle = $('.currentDate').text();
             
             // 年月部分を「YYYY-MM」の形式に変換
-            var currentDate = currentDateTitle.replace('年', '-').replace('月', ''); // "2024-12"
+            var currentDate = currentDateTitle.replace('年', '-').replace('月', '');
 
             // 選択した学年IDを代入
             var grade_id = $(this).attr('data-id');
             console.log('学年は'+grade_id+'です');
 
-            // ajax処理
             $.ajax({
                 type: 'GET',
                 url: 'curriculum_list/'+grade_id+'/'+currentDate
@@ -146,22 +154,22 @@
                         $('.grade').attr('data-id', grade);
                     }
 
-                    //  授業データを表示する
-                    $('.curriculum-list').append
+                    // 授業データを表示する
+                    $('.curriculum-item-row').append
                     (
-                    '<a class="curriculum-item border border-secondary border-2 d-inline-flex">'+
-                        '<div class="curriculum-item-title">'+ val.title + '</div>'+
-                        '<div class="curriculum-item-schedule">'+ val.description + '</div>'+
+                    '<div class="curriculum-item border border-secondary col-6 mb-2">'+
+                        '<div>'+ val.title + '</div>'+
+                        '<div>'+ val.description + '</div>'+
                         '<div>' + val.delivery_from + '</div>'+
                         '<div>'+ val.delivery_to + '</div>'+
-                    '</a>'
+                    '</div>'
                     )
                  })
                  })
         
             //失敗したとき
             .fail(function(){
-                console.log('失敗です！');
+                console.log('失敗しました');
             });
         
         })
@@ -233,21 +241,21 @@
 
 
                     //  一覧表示する
-                    $('.curriculum-list').append
+                    $('.curriculum-item-row').append
                     (
-                    '<a class="curriculum-item border border-secondary border-2 d-inline-flex">'+
-                        '<div class="curriculum-item-title">'+ val.title + '</div>'+
-                        '<div class="curriculum-item-schedule">'+ val.description + '</div>'+
+                    '<div class="curriculum-item border border-secondary col-6 mb-2">'+
+                        '<div>'+ val.title + '</div>'+
+                        '<div>'+ val.description + '</div>'+
                         '<div>' + val.delivery_from + '</div>'+
                         '<div>'+ val.delivery_to + '</div>'+
-                    '</a>'
+                    '</div>'
                     )
                  })
                  })
 
             //失敗したとき
             .fail(function(){
-                console.log('失敗しました！');
+                console.log('失敗しました');
             });
             
             }) 
@@ -317,14 +325,14 @@
                         $('.currentDate').text(yearMonth); // 新しい年月を表示
 
                         //  一覧表示する
-                        $('.curriculum-list').append
+                        $('.curriculum-item-row').append
                         (
-                        '<a class="curriculum-item border border-secondary border-2 d-inline-flex">'+
-                            '<div class="curriculum-item-title">'+ val.title + '</div>'+
-                            '<div class="curriculum-item-schedule">'+ val.description + '</div>'+
+                        '<div class="curriculum-item border border-secondary col-6 mb-2">'+
+                            '<div>'+ val.title + '</div>'+
+                            '<div>'+ val.description + '</div>'+
                             '<div>' + val.delivery_from + '</div>'+
                             '<div>'+ val.delivery_to + '</div>'+
-                        '</a>'
+                        '</div>'
                         )
                     })
                 })

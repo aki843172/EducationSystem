@@ -73,7 +73,7 @@ class AdminRegisterController extends Controller
         $request->validate([
             'name' => 'required|string|min:1|max:255',
             'kana' => 'required|string|min:1|max:255|regex:/^[ァ-ヶー]+$/u',
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|string|email|unique:admins,email|max:255',
             'password' => 'required|string|min:8|max:255|alpha_num',
             'password_confirmation' => 'required|string|same:password',
         ],

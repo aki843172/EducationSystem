@@ -24,7 +24,7 @@ class BannerRequest extends FormRequest
     public function rules()
     {
         return [
-            'image' => 'max:1000'
+            'image.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:255',
         ];
     }
 
@@ -47,7 +47,10 @@ class BannerRequest extends FormRequest
      */
     public function messages() {
         return [
-            'image.max' => ':attributeは:max字以内で入力してください。'
+            'image.*.image' => '画像ファイルをアップロードしてください。',
+            'image.*.max' => '画像ファイルのサイズは255以下にしてください。',
+            'image.mimes' => '画像形式は jpeg, png, jpg, gif, svg のみ許可されています。',
+
         ];
     }
 }

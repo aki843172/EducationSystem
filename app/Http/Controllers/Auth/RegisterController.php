@@ -75,7 +75,7 @@ class RegisterController extends Controller
         $request->validate([
             'name' => 'required|string|min:1|max:255',
             'name_kana' => 'required|string|min:1|max:255|regex:/^[ァ-ヶー]+$/u', // カタカナのみ
-            'email' => 'required|string|email|max:255',
+            'email' => 'required|string|email|unique:users,email|max:255',
             'password' => 'required|string|min:8|max:255|alpha_num', // 半角英数字
             'password_confirmation' => 'required|string|same:password', // 確認用パスワード
         ],

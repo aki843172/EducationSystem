@@ -16,9 +16,20 @@
         <x-message :message="session('message')" />
         @endif
 
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="bannerslist-wrap">
             <ul class="bannerslist-table">
 
+            @if($banners->isNotEmpty())
                 @foreach($banners as $banner)
                 <li class="bannerslist-row list-unstyled bg-light">
                     <td><img src="{{ asset($banner->image) }}" alt="商品画像" width="100"></td>
@@ -26,16 +37,18 @@
                     <button data-id="{{ $banner->id }}" class="bannerslist-delete">削除</button>
                 </li>
                 @endforeach
+            @endif
 
                 <!-- 行追加ボタン -->
                 <button type="button" class="bannerslist-add">
-                    <span>+</span>
+                    <span>行追加+</span>
                 </button>
             </ul>
         </div>
 
         <!-- バナー登録ボタン -->
         <button type="submit" class="bannerslist-save">登録</button>
+
     </form>
 </div>
 
@@ -52,7 +65,7 @@
             $('.bannerslist-table').append
                 ('<li class="bannerslist-row list-unstyled bg-light">' +
                     '<input id="image" type="file" name="image[]" class="form-control" multiple>' +
-                    '<button data-id="{{ $banner->id }}" class="bannerslist-delete">削除</button>' +
+                    '<button data-id="" class="bannerslist-delete">削除</button>' +
                 '</li>');
         })
     })
