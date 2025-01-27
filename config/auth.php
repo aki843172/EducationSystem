@@ -35,11 +35,21 @@ return [
     |
     */
 
+    // あえて平たく言うと「どうやって認証するか」が「ガード」で、「どこの情報と照らし合わせて認証するか」がプロバイダです。
+    // 通常、LaravelにおいてWebに表示した画面で認証をするときはセッションを使うので、今回もガードでセッションを利用することを宣言しています。
+    // 今回は管理画面系の認証はadmins、マイページ系の認証はmembersとして設定することにしました。
+
+    // 認証管理の方法（セッションかトークンか）
+
     'guards' => [
         'web' => [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ]
     ],
 
     /*
@@ -59,16 +69,19 @@ return [
     |
     */
 
+    // eloquentかdatabaseの指定
+
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\User::class
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
+            ],
+
     ],
 
     /*
@@ -86,9 +99,17 @@ return [
     |
     */
 
+    // パスワード再設定で使用するテーブルなどの指定
+
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

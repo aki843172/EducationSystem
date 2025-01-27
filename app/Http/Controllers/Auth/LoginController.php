@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+
 
 class LoginController extends Controller
 {
@@ -25,7 +29,13 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/user/curriculum_list';
+
+
+    public function showloginForm()
+    {
+        return view('user.auth.login');
+    }
 
     /**
      * Create a new controller instance.
@@ -37,4 +47,36 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
     }
+
+
+    protected function validateLogin(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|alpha_num',
+        ],
+        [
+            'email.required' => '*メールアドレスは必須項目です。',
+            'password.required' => '*パスワードは必須項目です。',
+            'password.alpha_num' => '*パスワードは半角英数字で入力してください。',
+        ]);
+    }
+
+
+    protected function sendFailedLoginResponse(Request $request)
+    {
+        throw ValidationException::withMessages([
+            'email' => ['メールアドレスが一致しません。'],
+            'password' => ['パスワードが一致しません。'],
+        ]);
+    }
+
+     // ログアウト処理
+     public function logout(Request $request){
+        Auth::guard('web')->logout(); // マルチログインの場合、guard指定が必要
+        $request->session()->invalidate(); // セッションを無効化
+        $request->session()->regenerateToken(); // CSRFトークンを再生成
+    
+        return redirect()->route('show.user.login')->with('message', 'ログアウトしました');}
+
 }

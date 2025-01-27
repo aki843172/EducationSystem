@@ -7,6 +7,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+        // 認証されたユーザーを特定のページにリダイレクトするためのミドルウェア
+        // ログインや登録のページにアクセスする際に、すでにログインしているユーザーが再度アクセスできないようにする役割を果たす
+
 class RedirectIfAuthenticated
 {
     /**
@@ -22,11 +25,14 @@ class RedirectIfAuthenticated
         $guards = empty($guards) ? [null] : $guards;
 
         foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
-            }
-        }
 
+            // もし管理者としてログイン状態なら、トップ画面へリダイレクトする
+            if($guard == "admin" && Auth::guard($guard)->check()){
+                return redirect('/admin/top');
+            }
+
+        }
+        // ログインしていなかったら、そのままリクエストを処理する
         return $next($request);
     }
 }

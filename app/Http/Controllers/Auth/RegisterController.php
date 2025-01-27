@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace app\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -28,9 +28,10 @@ class RegisterController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/user/curriculum_list';
 
-    /**
+
+        /**
      * Create a new controller instance.
      *
      * @return void
@@ -40,18 +41,54 @@ class RegisterController extends Controller
         $this->middleware('guest');
     }
 
+
     /**
-     * Get a validator for an incoming registration request.
+     * Create a new controller instance.
      *
-     * @param  array  $data
-     * @return \Illuminate\Contracts\Validation\Validator
+     * @return void
      */
-    protected function validator(array $data)
+
+     public function showRegisterForm()
+     {
+         return view('user.auth.register');
+     }
+ 
+
+    public function register(Request $request)
     {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+          // バリデーションを実行
+        $this->validateRegistration($request);
+
+        // ユーザーを作成
+        $user = $this->create($request->all());
+
+        auth('web')->login($user); // ユーザーとしてログイン
+
+        return redirect()->route('show.curriculum')->with('message', 'ユーザーが正常に作成されました'); //ログイン後のリダイレクト
+    }
+    // ログイン後のリダイレクトが効いていない
+
+
+    protected function validateRegistration(Request $request)
+    {
+        // バリデーションルールの定義
+        $request->validate([
+            'name' => 'required|string|min:1|max:255',
+            'name_kana' => 'required|string|min:1|max:255|regex:/^[ァ-ヶー]+$/u', // カタカナのみ
+            'email' => 'required|string|email|unique:users,email|max:255',
+            'password' => 'required|string|min:8|max:255|alpha_num', // 半角英数字
+            'password_confirmation' => 'required|string|same:password', // 確認用パスワード
+        ],
+        [
+            'name.required' => '*名前は必須項目です。',
+            'name_kana.required' => '*カナは必須項目です。',
+            'name_kana.regex' => '*カタカナで入力してください。',
+            'email.required' => '*メールアドレスは必須項目です。',
+            'password.required' => '*パスワードは必須項目です。',
+            'password.min' => '*パスワードは8文字以上で入力してください。',
+            'password.alpha_num' => '*パスワードは半角で入力してください。',
+            'password_confirmation.required' => '*確認用パスワードは必須項目です。',
+            'password_confirmation.same' => '*確認用パスワードが一致しません。',
         ]);
     }
 
@@ -65,8 +102,10 @@ class RegisterController extends Controller
     {
         return User::create([
             'name' => $data['name'],
+            'name_kana' => $data['name_kana'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'grade_id' => 1, // デフォルトの学年IDを設定
         ]);
     }
 }
