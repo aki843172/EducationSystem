@@ -21,4 +21,10 @@ class Curriculum extends Model
         $now = now();
         return $this->available_from <= $now && $this->available_to >= $now;
     }
+    protected $table = 'curriculums';
+
+    public function progress()
+    {
+        return $this->hasMany(CurriculumProgress::class, 'curriculums_id');
+    }
 }

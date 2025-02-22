@@ -18,11 +18,13 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name', 
-        'email', 
+        'name',
+        'name_kana',
+        'email',
         'password',
         'username', 
         'kana',
+        'profile_image',
     ];
 
     /**
@@ -43,4 +45,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class, 'grade_id');
+    }
 }
