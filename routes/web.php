@@ -48,8 +48,8 @@ Route::prefix('user')->namespace('User')->name('user.')->group(function () {
 
     Route::get('/top', [App\Http\Controllers\User\TopController::class, 'showtop'])->name('show.top');
 
-    // Route::get('/curriculum_list',[App\Http\Controllers\User\CurriculumController::class,'showCurriculumList'])->name('show.curriculum');
-    // Route::post('/curriculum_list', [App\Http\Controllers\User\CurriculumController::class, 'curriculum']);
+    Route::get('/curriculum_list',[App\Http\Controllers\User\CurriculumController::class,'showCurriculumList'])->name('show.curriculum');
+    Route::post('/curriculum_list', [App\Http\Controllers\User\CurriculumController::class, 'curriculum']);
 
     Route::get('/delivery/{id}', [App\Http\Controllers\User\DeliveryController::class, 'showDelivery'])->name('show.delivery');
     
@@ -57,8 +57,8 @@ Route::prefix('user')->namespace('User')->name('user.')->group(function () {
    //受講しましたボタンの処理のための進捗を登録するルート
     Route::post('/progress', [App\Http\Controllers\User\ProgressController::class, 'markAsCleared'])->name('progress');
 
-    // Route::get('/profile', [App\Http\Controllers\User\ProfileController::class, 'showProfileForm'])->name('show.profile');
-    // Route::post('/profile', [App\Http\Controllers\User\ProfileController::class, 'profile']);
+    Route::get('/profile', [App\Http\Controllers\User\ProfileController::class, 'showProfileForm'])->name('show.profile');
+    Route::post('/profile', [App\Http\Controllers\User\ProfileController::class, 'profile']);
 
     Route::get('/articles/{id}', [ArticleController::class, 'show'])->name('articles.show');
 

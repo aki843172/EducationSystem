@@ -32,8 +32,7 @@ class ProgressController extends Controller
     public function index()
     {
         // 現在のユーザー情報を取得
-        // $user = Auth::user();
-        $user = User::find(1);
+        $user = Auth::user();
 
             if ($user) {
                 echo $user->name;
