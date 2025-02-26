@@ -12,9 +12,10 @@ class Article extends Model
 
     protected $fillable = ['title', 'posted_date', 'article_contents'];
 
-    public function articleUpdate($request, $id){
-        $article = findOrFail($id);
-        $article->posted_date = Carbon::parse($request['posted_date'])->format('Y-m-d H:i:m'); 
+    public static function articleUpdate($request, $id)
+    {
+        $article = self::findOrFail($id); 
+        $article->posted_date = Carbon::parse($request['posted_date'])->format('Y-m-d H:i:s'); 
         $article->title = $request->title; 
         $article->article_contents = $request->article_contents; 
         $article->save();

@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Article;
 use Carbon\Carbon;
 use App\Http\Requests\StoreArticleForm;
+use Illuminate\Support\Facades\DB;
+
 
 class ArticleController extends Controller
 {
@@ -32,7 +34,7 @@ class ArticleController extends Controller
         DB::beginTransaction();
         try {
             $request['posted_date'] = Carbon::parse($request['posted_date'])->format('Y-m-d H:i:s');
-            Article::create($request);
+            Article::create($request->validated());
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();

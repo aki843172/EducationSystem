@@ -12,10 +12,9 @@
     </div>
 
     <h1 class="mb-4">お知らせ変更</h1>
-
+    
     <form method="POST" action="{{ route('admin.articles.update', $article->id) }}" class="bg-white p-4 rounded shadow-sm">
-        @csrf
-        @method
+    @csrf
 
         <!-- 投稿日時 -->
         <div class="mb-3">
