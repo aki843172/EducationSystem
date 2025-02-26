@@ -31,27 +31,33 @@ class ProfileController extends Controller
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // プロフィール画像の処理
-        if ($request->hasFile('profile_image')) {
-            if ($user->profile_image) {
-                Storage::delete($user->profile_image); // 古い画像を削除
+        DB::beginTransaction(); // トランザクション開始
+        try {
+            // プロフィール画像の処理
+            if ($request->hasFile('profile_image')) {
+                if ($user->profile_image) {
+                    Storage::delete($user->profile_image); // 古い画像を削除
+                }
+                $path = $request->file('profile_image')->store('profile_images', 'public');
+                $user->profile_image = $path;
             }
-            $path = $request->file('profile_image')->store('profile_images', 'public');
-            $user->profile_image = $path;
+
+            // その他のプロフィール情報を更新
+            $user->name = $request->name;
+            $user->name_kana = $request->name_kana;
+            $user->email = $request->email;
+
+            // パスワードの更新（入力された場合のみ）
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
+
+            $user->save(); // データベース更新
+
+            DB::commit(); // すべて成功したらコミット（確定）
+        } catch (\Exception $e) {
+            DB::rollBack(); // 失敗したらロールバック（データを元に戻す）
+            return back()->withErrors(['error' => '更新に失敗しました。']);
         }
-
-        // その他のプロフィール情報を更新
-        $user->name = $request->name;
-        $user->name_kana = $request->name_kana;
-        $user->email = $request->email;
-
-        // パスワードの更新（入力された場合のみ）
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
-        }
-
-        $user->save();
-
-        return redirect()->route('user.profile.edit')->with('success', 'プロフィールを更新しました');
-    }
+            }
 }

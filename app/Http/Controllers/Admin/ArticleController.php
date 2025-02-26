@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Article;
 use Carbon\Carbon;
+use App\Http\Requests\StoreArticleForm;
 
 class ArticleController extends Controller
 {
@@ -13,9 +14,9 @@ class ArticleController extends Controller
     public function showArticleList()
     {
         $articles = Article::all();
-    foreach ($articles as $article) {
-        $article->formatted_posted_date = Carbon::parse($article->posted_date)->format('Y年m月d日');
-    }
+        foreach ($articles as $article) {
+            $article->formatted_posted_date = Carbon::parse($article->posted_date)->format('Y年m月d日');
+        }
         return view('admin.articles.index', compact('articles'));
     }
 
@@ -26,18 +27,18 @@ class ArticleController extends Controller
     }
 
     // お知らせ登録処理
-    public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'posted_date' => 'required|date',
-        'title' => 'required|string|max:255',
-        'article_contents' => 'required|string',
-    ]);
-
-    $validatedData['posted_date'] = Carbon::parse($validatedData['posted_date'])->format('Y-m-d H:i:s');
-    Article::create($validatedData);
-    return redirect()->route('admin.articles.index')->with('success', 'お知らせを登録しました');
-}
+    public function store(StoreArticleForm $request)
+    {
+        DB::beginTransaction();
+        try {
+            $request['posted_date'] = Carbon::parse($request['posted_date'])->format('Y-m-d H:i:s');
+            Article::create($request);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+        return redirect()->route('admin.articles.index')->with('success', 'お知らせを登録しました');
+    }
 
     // お知らせ編集画面
     public function showArticleEdit($id)
@@ -47,22 +48,17 @@ class ArticleController extends Controller
     }
 
     // お知らせ更新処理
-    public function update(Request $request, $id)
-{
-    $validatedData = $request->validate([
-        'posted_date' => 'required|date',
-        'title' => 'required|string|max:255',
-        'article_contents' => 'required|string',
-    ]);
-
-    $article = Article::findOrFail($id);
-    $article->posted_date = Carbon::parse($validatedData['posted_date'])->format('Y-m-d H:i:m'); 
-    $article->title = $request->title; 
-    $article->article_contents = $request->article_contents; 
-    $article->save();
-
-    return redirect()->route('admin.articles.index')->with('success', 'お知らせを更新しました');
-}
+    public function update(StoreArticleForm $request, $id)
+    {
+        DB::beginTransaction();
+        try {
+            Article::articleUpdate($request, $id);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollback();
+        }
+        return redirect()->route('admin.articles.index')->with('success', 'お知らせを更新しました');
+    }
 
     // お知らせ削除
     public function destroy($id)

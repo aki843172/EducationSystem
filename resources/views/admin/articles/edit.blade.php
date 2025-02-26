@@ -15,12 +15,12 @@
 
     <form method="POST" action="{{ route('admin.articles.update', $article->id) }}" class="bg-white p-4 rounded shadow-sm">
         @csrf
-        @method('PUT')
+        @method
 
         <!-- 投稿日時 -->
         <div class="mb-3">
             <label class="form-label fw-bold">投稿日時</label>
-            <input type="datetime-local" name="posted_date" value="{{ old('posted_date', optional($article->posted_date)->format('Y-m-d\TH:i')) }}" class="form-control" required>
+            <input type="datetime-local" name="posted_date" value="{{ old('posted_date', $article->posted_date ? $article->posted_date.'T00:00' : null) }}" class="form-control" required>
         </div>
 
         <!-- タイトル -->
@@ -32,7 +32,7 @@
         <!-- 本文 -->
         <div class="mb-3">
             <label class="form-label fw-bold">本文</label>
-            <textarea name="article_contents" class="form-control" rows="4" required>{{ old('article_contents', $article->article_content) }}</textarea>
+            <textarea name="article_contents" class="form-control" rows="4" required>{{ old('article_contents', $article->article_contents) }}</textarea>
         </div>
 
         <!-- 登録ボタン -->

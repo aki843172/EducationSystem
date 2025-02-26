@@ -72,10 +72,10 @@ Route::prefix('user')->namespace('User')->name('user.')->group(function () {
 });
 
 Route::prefix('admin')->name('admin.articles.')->group(function () {
-    Route::get('/index', [AdminArticleController::class, 'showArticleList'])->name('index'); 
-    Route::get('/create', [AdminArticleController::class, 'showArticleCreate'])->name('create');
-    Route::post('/create', [AdminArticleController::class, 'store'])->name('store');
-    Route::get('/edit/{id}', [AdminArticleController::class, 'showArticleEdit'])->name('edit');
-    Route::post('/edit/{id}', [AdminArticleController::class, 'update'])->name('update');
-    Route::delete('/delete/{id}', [AdminArticleController::class, 'destroy'])->name('destroy');
+    Route::get('article/index', [AdminArticleController::class, 'showArticleList'])->name('index'); 
+    Route::get('article/create', [AdminArticleController::class, 'showArticleCreate'])->name('create');
+    Route::post('article/create', [AdminArticleController::class, 'store'])->name('store');
+    Route::get('article/edit/{id}', [AdminArticleController::class, 'showArticleEdit'])->name('edit');
+    Route::post('article/edit/{id}', [AdminArticleController::class, 'update'])->name('update');
+    Route::delete('article/delete/{id}', [AdminArticleController::class, 'destroy'])->name('destroy');
 });

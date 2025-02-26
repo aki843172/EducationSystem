@@ -50,4 +50,18 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Grade::class, 'grade_id');
     }
+
+    public function requestConversion($request, $user){
+        $user->name = $request->name;
+        $user->name_kana = $request->name_kana;
+        $user->email = $request->email; 
+    }
+
+    public function changePassword($request, $user){
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+    }
+
+    
 }
