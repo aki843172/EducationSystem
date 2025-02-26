@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -19,8 +19,12 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'name_kana',
         'email',
         'password',
+        'username', 
+        'kana',
+        'profile_image',
     ];
 
     /**
@@ -41,4 +45,23 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class, 'grade_id');
+    }
+
+    public function requestConversion($request, $user){
+        $user->name = $request->name;
+        $user->name_kana = $request->name_kana;
+        $user->email = $request->email; 
+    }
+
+    public function changePassword($request, $user){
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+    }
+
+    
 }

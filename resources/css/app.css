@@ -1,0 +1,317 @@
+.header {
+    background-color: #ffa07a; /* オレンジ色 */
+    padding: 10px;
+    text-align: center;
+}
+
+.nav-buttons .btn {
+    background-color: #008cba; /* ボタンの色 */
+    color: white;
+    padding: 10px 15px;
+    margin: 5px;
+    text-decoration: none;
+}
+
+.banner-container {
+    position: relative;
+    width: 100%;
+}
+
+.banner {
+    width: 100%;
+    overflow: hidden; /* 画像がはみ出ないように */
+}
+
+.banner img {
+    width: 100%; /* バナー画像を全幅に */
+    height: auto;
+}
+
+.banner-controls {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+}
+
+.banner-controls button {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+}
+
+.news {
+    margin-top: 20px;
+}
+
+.news h2 {
+    font-size: 24px;
+}
+
+.news ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* ページ全体のレイアウト */
+.container {
+    max-width: 900px;
+}
+
+/* ヘッダーのデザイン */
+.btn-link {
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+/* タイトルのスタイル */
+h1 {
+    font-weight: bold;
+}
+
+/* テーブルのデザイン */
+.table {
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+/* ボタンのデザイン */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    border: none;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+/* ページ全体のレイアウト */
+.container {
+    max-width: 800px;
+}
+
+/* フォームのデザイン */
+form {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* タイトルのフォントサイズを調整 */
+h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* 戻るボタンのデザイン */
+.btn-link {
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+/* 入力フォームのデザイン */
+.form-control {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+/* 登録ボタン */
+.btn-dark {
+    font-size: 1rem;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+/* ページ全体のレイアウト */
+.container {
+    max-width: 800px;
+}
+
+/* フォームのデザイン */
+form {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* タイトルのフォントサイズを調整 */
+h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* 戻るボタンのデザイン */
+.btn-link {
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+/* 入力フォームのデザイン */
+.form-control {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+/* 登録ボタン */
+.btn-dark {
+    font-size: 1rem;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+
+/* ページ全体のレイアウト */
+.container {
+    max-width: 800px;
+}
+
+/* 戻るボタン */
+.btn-link {
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+/* 投稿日時 */
+.text-muted {
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+/* タイトル */
+h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+/* 本文 */
+.lh-lg {
+    line-height: 1.8;
+    font-size: 1rem;
+}
+
+/* ページ全体のレイアウト */
+.container {
+    max-width: 800px;
+}
+
+/* 戻るボタン */
+.btn-link {
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+/* 見出し */
+h1 {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+/* フォームのデザイン */
+form {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* 入力フォーム */
+.form-control {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+/* ボタン */
+.btn-danger {
+    font-size: 1rem;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
+
+/* ページ全体のレイアウト */
+.container {
+    max-width: 1000px;
+}
+
+/* 戻るボタン */
+.btn-link {
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+/* プロフィール画像 */
+.profile-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border: 3px solid #ddd;
+}
+
+/* 学年バッジ */
+.badge {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+}
+
+/* 授業進捗カード */
+.card {
+    border-radius: 10px;
+}
+
+.card-header {
+    font-size: 1.2rem;
+}
+
+.list-unstyled li {
+    font-size: 1rem;
+}
+/* ページ全体のレイアウト */
+.container {
+    max-width: 800px;
+}
+
+/* 戻るボタン */
+.btn-link {
+    font-size: 1.2rem;
+    text-decoration: none;
+}
+
+/* プロフィール画像 */
+.profile-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border: 3px solid #ddd;
+}
+
+/* 入力フォーム */
+.form-control {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+/* ボタン */
+.btn-danger {
+    font-size: 1rem;
+    border-radius: 4px;
+    padding: 10px 20px;
+}
